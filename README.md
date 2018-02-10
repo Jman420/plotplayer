@@ -59,4 +59,4 @@ treated as the animation canvas.  An axis will always be added for the slider at
 the window.
 
 # Examples
-See [plotplayer_test.py]
+See [plotplayer_test.py](plotplayer/plotplayer_test.py)
