@@ -9,6 +9,17 @@ a focus on Object Oriented Principles, as well as some additional features for c
 - Support pre-created Matplotlib Figure and Axis as animation canvas
 - Support multiple semi-independent simultaneous playbacks (see Usage section below)
 - Support scrubbing via Slider and Keyboard Shortcuts during playback
+- Support saving animation as video, html and javascript
+- Support hiding/showing Matplotlib Toolbar
+- Pip scripts for easy installation
+
+# Keyboard Shortcuts
+Toggle Toolbar - T
+Toggle Playback - Space/Enter
+Skip Ahead 1 Frame - Right
+Skip Back 1 Frame - Left
+Skip to Beginning - Home
+Skip to End - End
 
 # Usage
 Basic Playback

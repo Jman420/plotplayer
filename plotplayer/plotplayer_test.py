@@ -1,6 +1,7 @@
-import plotplayer
+from plotplayer.plotplayer import plotplayer
 import numpy as np
 import matplotlib.pylab as pylab
+import matplotlib.pyplot as pyplot
 
 def redraw_fn(f, axes):
     amp = float(f) / 3000
@@ -14,7 +15,12 @@ def redraw_fn(f, axes):
         redraw_fn.l.set_ydata(s)
 redraw_fn.initialized = False
 
-video1 = plotplayer.plotplayer()
+video1 = plotplayer()
+video1.hideToolbar()
 video1.initializeAnimation(100, redraw_fn)
 video1.play()
+
+#video1.saveAnimationVideo("C:\\temp\\dummy.mp4")
+#video1.saveHtml("C:\\temp\\dummy-html.html")
+
 video1.show()
