@@ -30,8 +30,8 @@ player1.initializeAnimation(50, drawFunc)
 player2 = plotplayer("Dummy Animation 2")
 player2.initializeAnimation(100, drawFunc)
 
-player1.play()
 player1.show(False)
+player1.play()
 
 player2.play()
 player2.show()
