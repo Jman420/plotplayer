@@ -14,19 +14,19 @@ a focus on Object Oriented Principles, as well as some additional features for c
 - Pip scripts for easy installation
 
 # Keyboard Shortcuts
-Toggle Toolbar - T
-Toggle Playback - Space/Enter
-Skip Ahead 1 Frame - Right
-Skip Back 1 Frame - Left
-Skip to Beginning - Home
-Skip to End - End
+* Toggle Toolbar - T
+* Toggle Playback - Space/Enter
+* Skip Ahead 1 Frame - Right
+* Skip Back 1 Frame - Left
+* Skip to Beginning - Home
+* Skip to End - End
 
 # Saving as Video
 To save an animation as a video press and hold the 's' key and then press one of the following keys
 to select the output format:
-V - mp4 video using ffmpeg (must have ffmpeg installed)
-H - HTML5 video
-J - Javascript video
+* V - mp4 video using ffmpeg (must have ffmpeg installed)
+* H - HTML5 video
+* J - Javascript video
 
 # Installation
 plotplayer includes pip scripts to handle installation into the Python Environment.  First clone the
