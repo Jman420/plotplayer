@@ -86,7 +86,19 @@ figure then one will be added as the animation canvas.  If axes exist then the c
 treated as the animation canvas.  An axis will always be added for the slider at the bottom of
 the window.
 
+## Custom Key Press Handler
+```python
+def keyPressHandler(eventData):
+    print(eventData)
+    return False
 
+player = plotplayer("Dummy Animation", keyPressHandler=keyPressHandler)
+player.initializeAnimation(100, drawFunc)
+player.play()
+player.show()
+```
+A Custom Key Press Handler can override Default Keyboard Shortcuts by returning True.  This
+indicates to plotplayer that the key press has been handled and to sop processing the event.
 
 # Examples
 See [plotplayer_test.py](plotplayer/plotplayer_test.py)
