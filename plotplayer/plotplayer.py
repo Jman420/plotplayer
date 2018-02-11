@@ -15,6 +15,8 @@ ANIMATION_NAME = 'plotplayer'
 
 SKIP_BACK_BUTTON = 'left'
 SKIP_AHEAD_BUTTON = 'right'
+JUMP_BACK_BUTTON = 'down'
+JUMP_AHEAD_BUTTON = 'up'
 TOGGLE_PLAY_BUTTON = [ ' ', 'enter' ]
 GOTO_BEGINNING_BUTTON = 'home'
 GOTO_END_BUTTON = 'end'
@@ -24,9 +26,15 @@ SAVE_VIDEO_BUTTON = 'v'
 SAVE_HTML_BUTTON = 'h'
 SAVE_JAVASCRIPT_BUTTON = 'j'
 
+KEYS_TRIGGER_STOP = [ SKIP_BACK_BUTTON, SKIP_AHEAD_BUTTON, JUMP_BACK_BUTTON, JUMP_AHEAD_BUTTON,
+                     GOTO_BEGINNING_BUTTON, GOTO_END_BUTTON ]
+
 VIDEO_SUFFIX = '.mp4'
 HTML_SUFFIX = '.html'
 JAVASCRIPT_SUFFIX = '-js.html'
+
+SKIP_SIZE = 1
+JUMP_SIZE = 10
 
 pylab.plt.rcParams['keymap.save'].remove(SAVE_BUTTON)
 
@@ -51,11 +59,12 @@ class plotplayer(object):
     _sliderAxes = _slider = None
     _animation = _playing = None
     _drawFunc = _keyPressHandler = None
+    _skipSize = _jumpSize = None
     _toolbarHidden = _playing = False
     _saveButtonPressed = False
 
     def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR, hideToolbar=True,
-                keyPressHandler=None):
+                keyPressHandler=None, skipSize=SKIP_SIZE, jumpSize=JUMP_SIZE):
         if figure == None:
             figure = pylab.plt.figure()
         assertIsFigure(figure, 'figure')
@@ -77,6 +86,8 @@ class plotplayer(object):
         self._animationAxes = animationAxes
         self._sliderAxes = sliderAxes
         self._keyPressHandler = keyPressHandler
+        self._skipSize = skipSize
+        self._jumpSize = jumpSize
 
         if hideToolbar:
             self.hideToolbar()
@@ -170,11 +181,10 @@ class plotplayer(object):
             self.hideToolbar()
 
     def handleKeyPress(self, eventData):
-        key = eventData.key
-
         if not self._keyPressHandler == None and self._keyPressHandler(eventData) == True:
             return
         
+        key = eventData.key
         if self._saveButtonPressed:
             animationName = self._animationName
             if key == SAVE_VIDEO_BUTTON:
@@ -184,14 +194,18 @@ class plotplayer(object):
             elif key == SAVE_JAVASCRIPT_BUTTON:
                 self.saveJavascript(animationName + JAVASCRIPT_SUFFIX)
 
-        if key in [ SKIP_BACK_BUTTON, SKIP_AHEAD_BUTTON, GOTO_BEGINNING_BUTTON, GOTO_END_BUTTON ]:
+        if key in KEYS_TRIGGER_STOP:
             self.stop()
 
         currentFrame = int(self._slider.val)
         if key == SKIP_BACK_BUTTON:
-            self.render(currentFrame - 1)
+            self.render(currentFrame - self._skipSize)
         elif key == SKIP_AHEAD_BUTTON:
-            self.render(currentFrame + 1)
+            self.render(currentFrame + self._skipSize)
+        elif key == JUMP_BACK_BUTTON:
+            self.render(currentFrame - self._jumpSize)
+        elif key == JUMP_AHEAD_BUTTON:
+            self.render(currentFrame + self._jumpSize)
         elif key == GOTO_BEGINNING_BUTTON:
             self.render(0)
         elif key == GOTO_END_BUTTON:

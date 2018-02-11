@@ -13,15 +13,18 @@ a focus on Object Oriented Principles, as well as some additional features for c
 - Support hiding/showing Matplotlib Toolbar
 - Support custom Key Press Handler
 - Support overriding Keyboard Shortcuts
+- Support custom Skip and Jump Sizes
 - Pip scripts for easy installation
 
 # Keyboard Shortcuts
 * Toggle Toolbar - T
 * Toggle Playback - Space/Enter
-* Skip Ahead 1 Frame - Right
-* Skip Back 1 Frame - Left
-* Skip to Beginning - Home
-* Skip to End - End
+* Skip Ahead - Right
+* Skip Back - Left
+* Jump Ahead - Up
+* Jump Back - Down
+* Jump to Beginning - Home
+* Jump to End - End
 
 # Saving as Video
 To save an animation as a video press and hold the 's' key and then press one of the following keys
