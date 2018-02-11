@@ -21,7 +21,20 @@ Skip Back 1 Frame - Left
 Skip to Beginning - Home
 Skip to End - End
 
+# Saving as Video
+To save an animation as a video press and hold the 's' key and then press one of the following keys
+to select the output format:
+V - mp4 video using ffmpeg (must have ffmpeg installed)
+H - HTML5 video
+J - Javascript video
 
+# Installation
+plotplayer includes pip scripts to handle installation into the Python Environment.  First clone the
+plotplayer repository and then run the following command:
+
+```
+pip install <path to plotplayer repo root>
+```
 
 # Usage
 Basic Playback
@@ -50,11 +63,11 @@ player2.play()
 player2.show()
 ```
 All players except the last to be shown must have a call to its show() method with the parameter
-False.  This displays the associated plot as non-blocking, allowing for the remaining plots to
-show themselves and begin playback.  The final player to be shown must have a call to its show()
-with the parameter True, if provided.
+False and must be shown before playing.  This displays the associated plot as non-blocking,
+allowing for the remaining plots to show themselves and begin playback.  The final player to be
+shown must have a call to its show() with the parameter True, if provided.
 
-When displaying multiple simultaneous playbacks if an error is encountered both playback windows
+When displaying multiple simultaneous playbacks if an error is encountered all playback windows
 will be closed due to unexpected behavior.  It is highly recommended to stop playback before
 closing any of the playback windows to avoid these types of errors.
 
