@@ -47,14 +47,15 @@ def assertIsFunction(value, variableName):
 class plotplayer(object):
     '''Lightweight function based animation player for Matplotlib'''
     _figure = _animationName = None
-    _animationAxes = _drawFunc = None
+    _animationAxes = _frameRate = None
     _sliderAxes = _slider = None
     _animation = _playing = None
-    _frameRate = None
+    _drawFunc = _keyPressHandler = None
     _toolbarHidden = _playing = False
     _saveButtonPressed = False
 
-    def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR, hideToolbar=True):
+    def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR, hideToolbar=True,
+                keyPressHandler=None):
         if figure == None:
             figure = pylab.plt.figure()
         assertIsFigure(figure, 'figure')
@@ -75,6 +76,7 @@ class plotplayer(object):
         self._figure = figure
         self._animationAxes = animationAxes
         self._sliderAxes = sliderAxes
+        self._keyPressHandler = keyPressHandler
 
         if hideToolbar:
             self.hideToolbar()
@@ -169,6 +171,9 @@ class plotplayer(object):
 
     def handleKeyPress(self, eventData):
         key = eventData.key
+
+        if not self._keyPressHandler == None and self._keyPressHandler(eventData) == True:
+            return
         
         if self._saveButtonPressed:
             animationName = self._animationName
