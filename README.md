@@ -37,7 +37,7 @@ pip install <path to plotplayer repo root>
 ```
 
 # Usage
-Basic Playback
+## Basic Playback
 ```python
 player = plotplayer("Dummy Animation")
 player.initializeAnimation(100, drawFunc)
@@ -48,7 +48,7 @@ This will display 100 frames of animation drawn by the drawFunc() method.  A cal
 plotplayer.show() method is required as the final line for playback to begin.  The parameter to
 the plotplayer.show() method must be True, if provided.
 
-Multiple Simultaneous Playbacks
+## Multiple Simultaneous Playbacks
 ```python
 player1 = plotplayer("Dummy Animation 1")
 player1.initializeAnimation(50, drawFunc)
@@ -71,7 +71,7 @@ When displaying multiple simultaneous playbacks if an error is encountered all p
 will be closed due to unexpected behavior.  It is highly recommended to stop playback before
 closing any of the playback windows to avoid these types of errors.
 
-Pre-Created Figure
+## Pre-Created Figure
 ```python
 figure = matplotlib.pylab.plt.figure()
 player = plotplayer("Dummy Animation", figure)
