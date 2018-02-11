@@ -11,6 +11,8 @@ a focus on Object Oriented Principles, as well as some additional features for c
 - Support scrubbing via Slider and Keyboard Shortcuts during playback
 - Support saving animation as video, html and javascript
 - Support hiding/showing Matplotlib Toolbar
+- Support custom Key Press Handler
+- Support overriding Keyboard Shortcuts
 - Pip scripts for easy installation
 
 # Keyboard Shortcuts
@@ -83,6 +85,20 @@ The pre-created figure must be of type matplotlib.figure.Figure.  If no axes are
 figure then one will be added as the animation canvas.  If axes exist then the current axes is
 treated as the animation canvas.  An axis will always be added for the slider at the bottom of
 the window.
+
+## Custom Key Press Handler
+```python
+def keyPressHandler(eventData):
+    print(eventData)
+    return False
+
+player = plotplayer("Dummy Animation", keyPressHandler=keyPressHandler)
+player.initializeAnimation(100, drawFunc)
+player.play()
+player.show()
+```
+A Custom Key Press Handler can override Default Keyboard Shortcuts by returning True.  This
+indicates to plotplayer that the key press has been handled and to sop processing the event.
 
 # Examples
 See [plotplayer_test.py](plotplayer/plotplayer_test.py)
