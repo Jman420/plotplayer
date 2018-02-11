@@ -7,6 +7,29 @@ from matplotlib.widgets import Slider
 from matplotlib.figure import Figure
 import tkinter.constants as Tkinter
 
+IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
+SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
+SLIDER_BACKGROUND_COLOR = 'lightgoldenrodyellow'
+
+ANIMATION_NAME = 'plotplayer'
+
+SKIP_BACK_BUTTON = 'left'
+SKIP_AHEAD_BUTTON = 'right'
+TOGGLE_PLAY_BUTTON = [ ' ', 'enter' ]
+GOTO_BEGINNING_BUTTON = 'home'
+GOTO_END_BUTTON = 'end'
+TOGGLE_TOOLBAR_BUTTON = 't'
+SAVE_BUTTON = 's'
+SAVE_VIDEO_BUTTON = 'v'
+SAVE_HTML_BUTTON = 'h'
+SAVE_JAVASCRIPT_BUTTON = 'j'
+
+VIDEO_SUFFIX = '.mp4'
+HTML_SUFFIX = '.html'
+JAVASCRIPT_SUFFIX = '-js.html'
+
+pylab.plt.rcParams['keymap.save'].remove(SAVE_BUTTON)
+
 def saveFile(fileName, data):
     file = open(fileName, 'w')
     file.write(data)
@@ -23,32 +46,31 @@ def assertIsFunction(value, variableName):
 
 class plotplayer(object):
     '''Lightweight function based animation player for Matplotlib'''
-
-    IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
-    SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
-
     _figure = _animationName = None
     _animationAxes = _drawFunc = None
     _sliderAxes = _slider = None
     _animation = _playing = None
     _frameRate = None
     _toolbarHidden = _playing = False
+    _saveButtonPressed = False
 
-    def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor='lightgoldenrodyellow', hideToolbar=True):
+    def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR, hideToolbar=True):
         if figure == None:
             figure = pylab.plt.figure()
         assertIsFigure(figure, 'figure')
 
         if not windowTitle == None:
             figure.canvas.set_window_title(windowTitle)
+        else:
+            figure.canvas.set_window_title(ANIMATION_NAME)
 
         if len(figure.axes) > 0:
             animationAxes = figure.gca()
         else:
-            animationAxes = figure.add_axes(self.IMAGE_AXES_RECT)
+            animationAxes = figure.add_axes(IMAGE_AXES_RECT)
             animationAxes.set_axis_off()
 
-        sliderAxes = figure.add_axes(self.SLIDER_AXES_RECT, facecolor=sliderBackgroundColor)
+        sliderAxes = figure.add_axes(SLIDER_AXES_RECT, facecolor=sliderBackgroundColor)
 
         self._figure = figure
         self._animationAxes = animationAxes
@@ -57,7 +79,7 @@ class plotplayer(object):
         if hideToolbar:
             self.hideToolbar()
 
-    def initializeAnimation(self, totalFrames, drawFunc, animationName='plotplayer', frameRate=30):
+    def initializeAnimation(self, totalFrames, drawFunc, animationName=ANIMATION_NAME, frameRate=30):
         assertIsInt(totalFrames, 'totalFrames')
         assertIsFunction(drawFunc, 'drawFunc')
         assertIsInt(frameRate, 'frameRate')
@@ -68,6 +90,7 @@ class plotplayer(object):
         self._animationName = animationName
         self._figure.canvas.mpl_connect('button_press_event', self.handleMouseButtonDown)
         self._figure.canvas.mpl_connect('key_press_event', self.handleKeyPress)
+        self._figure.canvas.mpl_connect('key_release_event', self.handleKeyRelease)
 
         self._playing = False
         self._drawFunc = drawFunc
@@ -143,25 +166,40 @@ class plotplayer(object):
 
     def handleKeyPress(self, eventData):
         key = eventData.key
-        currentFrame = int(self._slider.val)
+        
+        if self._saveButtonPressed:
+            animationName = self._animationName
+            if key == SAVE_VIDEO_BUTTON:
+                self.saveVideo(animationName + VIDEO_SUFFIX)
+            elif key == SAVE_HTML_BUTTON:
+                self.saveHtml(animationName + HTML_SUFFIX)
+            elif key == SAVE_JAVASCRIPT_BUTTON:
+                self.saveJavascript(animationName + JAVASCRIPT_SUFFIX)
 
-
-
-        if key in [ 'left', 'right', 'end', 'home' ]:
+        if key in [ SKIP_BACK_BUTTON, SKIP_AHEAD_BUTTON, GOTO_BEGINNING_BUTTON, GOTO_END_BUTTON ]:
             self.stop()
 
-        if key == 'left':
+        currentFrame = int(self._slider.val)
+        if key == SKIP_BACK_BUTTON:
             self.render(currentFrame - 1)
-        elif key == 'right':
+        elif key == SKIP_AHEAD_BUTTON:
             self.render(currentFrame + 1)
-        elif key == 'end':
-            self.render(self._slider.valmax)
-        elif key == 'home':
+        elif key == GOTO_BEGINNING_BUTTON:
             self.render(0)
-        elif key in [ ' ', 'enter' ]:
+        elif key == GOTO_END_BUTTON:
+            self.render(self._slider.valmax)
+        elif key in TOGGLE_PLAY_BUTTON:
             self.togglePlayback()
-        elif key == 't':
+        elif key == TOGGLE_TOOLBAR_BUTTON:
             self.toggleToolbar()
+        elif key == SAVE_BUTTON:
+            self._saveButtonPressed = True
+
+    def handleKeyRelease(self, eventData):
+        key = eventData.key
+
+        if key == SAVE_BUTTON:
+            self._saveButtonPressed = False
 
     def handleMouseButtonDown(self, eventData):
         if eventData.inaxes == self._sliderAxes:

@@ -1,4 +1,4 @@
-from plotplayer.plotplayer import plotplayer
+from plotplayer import plotplayer
 import numpy as np
 import matplotlib.pylab as pylab
 import matplotlib.pyplot as pyplot
