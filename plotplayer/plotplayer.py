@@ -130,6 +130,9 @@ class plotplayer(object):
         if self._playing:
             return
 
+        if self._slider.val == self._slider.valmax:
+            self.render(0)
+
         framesToPlay = range(int(self._slider.val), self._slider.valmax + 1)
         animation = FuncAnimation(self._figure, self.render, framesToPlay, interval=1000 // self._frameRate, repeat=False)
         self._figure.canvas.draw()
