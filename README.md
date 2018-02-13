@@ -14,6 +14,7 @@ a focus on Object Oriented Principles, as well as some additional features for c
 - Support custom Key Press Handler
 - Support overriding Keyboard Shortcuts
 - Support custom Skip and Jump Sizes
+- Support custom initial window size (set via aspect ratio: (4,3); default:(8,4.5); (16,9); (21,9), etc)
 - Pip scripts for easy installation
 
 # Keyboard Shortcuts
