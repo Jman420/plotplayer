@@ -7,6 +7,7 @@ from matplotlib.widgets import Slider
 from matplotlib.figure import Figure
 import tkinter.constants as Tkinter
 
+WINDOW_SIZE=(8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9
 IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
 SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
 SLIDER_BACKGROUND_COLOR = 'lightgoldenrodyellow'
@@ -63,10 +64,10 @@ class plotplayer(object):
     _toolbarHidden = _playing = False
     _saveButtonPressed = False
 
-    def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR, hideToolbar=True,
+    def __init__(self, windowTitle=None, figure=None, windowSize=WINDOW_SIZE, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR, hideToolbar=True,
                 keyPressHandler=None, skipSize=SKIP_SIZE, jumpSize=JUMP_SIZE):
         if figure == None:
-            figure = pylab.plt.figure()
+            figure = pylab.plt.figure(figsize=windowSize)
         assertIsFigure(figure, 'figure')
 
         if not windowTitle == None:
@@ -127,17 +128,6 @@ class plotplayer(object):
 
         if newFrameNumber == self._slider.valmax:
             self.stop()
-
-    def show(self, blocking=True):
-        try:
-            pylab.plt.show(blocking)
-        except AttributeError:
-            print('Videofig encountered a playback error.')
-            print('This is usually due to a videofig window getting closed during animation playback...')
-            print('This causes all open videofig windows to malfunction.')
-            print('Closing all videofig windows...')
-            pylab.plt.close('all')
-            pass
 
     def play(self):
         if self._playing:
@@ -245,3 +235,15 @@ class plotplayer(object):
     def saveJavascript(self, fileName):
         videoJavascript = self.getJavascript()
         saveFile(fileName, videoJavascript)
+
+    @staticmethod
+    def showPlayers(blocking=True):
+        try:
+            pylab.plt.show(blocking)
+        except AttributeError:
+            print('Videofig encountered a playback error.')
+            print('This is usually due to a videofig window getting closed during animation playback...')
+            print('This causes all open videofig windows to malfunction.')
+            print('Closing all videofig windows...')
+            pylab.plt.close('all')
+            pass

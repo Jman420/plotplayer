@@ -14,6 +14,7 @@ a focus on Object Oriented Principles, as well as some additional features for c
 - Support custom Key Press Handler
 - Support overriding Keyboard Shortcuts
 - Support custom Skip and Jump Sizes
+- Support custom initial window size (set via aspect ratio: (4,3); default:(8,4.5); (16,9); (21,9), etc)
 - Pip scripts for easy installation
 
 # Keyboard Shortcuts
@@ -42,16 +43,28 @@ pip install <path to plotplayer repo root>
 ```
 
 # Usage
-## Basic Playback
+# Basic Usage
+```python
+player = plotplayer("Dummy Animation")
+player.initializeAnimation(100, drawFunc)
+plotplayer.showPlayers()
+```
+This will display a plotplayer window associated with 100 frames of animation drawn by the drawFunc()
+method.  The player will wait for user input to begin playback.  A call to the plotplayer.showPlayers()
+method is required as the final line for playback to begin.  The parameter to the
+plotplayer.showPlayers() method must be True, if provided.  To display plotplayer windows and continue
+executing code after the plotplayer.showPlayers() method call you can provide False as the parameter,
+but playback and input handled by plotplay will not function until a blocking call is made to
+plotplayer.showPlayers() either with no parameters or the parameter True.
+
+## Automatic Playback
 ```python
 player = plotplayer("Dummy Animation")
 player.initializeAnimation(100, drawFunc)
 player.play()
-player.show()
+plotplayer.showPlayers()
 ```
-This will display 100 frames of animation drawn by the drawFunc() method.  A call to the
-plotplayer.show() method is required as the final line for playback to begin.  The parameter to
-the plotplayer.show() method must be True, if provided.
+This will auto playback 100 frames of animation drawn by the drawFunc() method.
 
 ## Multiple Simultaneous Playbacks
 ```python
@@ -61,17 +74,11 @@ player1.initializeAnimation(50, drawFunc)
 player2 = plotplayer("Dummy Animation 2")
 player2.initializeAnimation(100, drawFunc)
 
-player1.show(False)
 player1.play()
-
 player2.play()
-player2.show()
-```
-All players except the last to be shown must have a call to its show() method with the parameter
-False and must be shown before playing.  This displays the associated plot as non-blocking,
-allowing for the remaining plots to show themselves and begin playback.  The final player to be
-shown must have a call to its show() with the parameter True, if provided.
 
+plotplayer.showPlayers()
+```
 When displaying multiple simultaneous playbacks if an error is encountered all playback windows
 will be closed due to unexpected behavior.  It is highly recommended to stop playback before
 closing any of the playback windows to avoid these types of errors.
@@ -81,8 +88,7 @@ closing any of the playback windows to avoid these types of errors.
 figure = matplotlib.pylab.plt.figure()
 player = plotplayer("Dummy Animation", figure)
 player.initializeAnimation(100, drawFunc)
-player.play()
-player.show()
+plotplayer.showPlayers()
 ```
 The pre-created figure must be of type matplotlib.figure.Figure.  If no axes are present on the
 figure then one will be added as the animation canvas.  If axes exist then the current axes is
@@ -97,11 +103,10 @@ def keyPressHandler(eventData):
 
 player = plotplayer("Dummy Animation", keyPressHandler=keyPressHandler)
 player.initializeAnimation(100, drawFunc)
-player.play()
-player.show()
+plotplayer.showPlayers()
 ```
 A Custom Key Press Handler can override Default Keyboard Shortcuts by returning True.  This
-indicates to plotplayer that the key press has been handled and to sop processing the event.
+indicates to plotplayer that the key press has been handled and to stop processing the event.
 
 # Examples
 See [plotplayer_test.py](plotplayer/plotplayer_test.py)

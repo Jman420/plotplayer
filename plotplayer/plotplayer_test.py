@@ -20,7 +20,4 @@ video1.hideToolbar()
 video1.initializeAnimation(100, redraw_fn)
 video1.play()
 
-#video1.saveAnimationVideo("C:\\temp\\dummy.mp4")
-#video1.saveHtml("C:\\temp\\dummy-html.html")
-
-video1.show()
+plotplayer.showPlayers()
