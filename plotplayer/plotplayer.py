@@ -129,17 +129,6 @@ class plotplayer(object):
         if newFrameNumber == self._slider.valmax:
             self.stop()
 
-    def show(self, blocking=True):
-        try:
-            pylab.plt.show(blocking)
-        except AttributeError:
-            print('Videofig encountered a playback error.')
-            print('This is usually due to a videofig window getting closed during animation playback...')
-            print('This causes all open videofig windows to malfunction.')
-            print('Closing all videofig windows...')
-            pylab.plt.close('all')
-            pass
-
     def play(self):
         if self._playing:
             return
@@ -246,3 +235,15 @@ class plotplayer(object):
     def saveJavascript(self, fileName):
         videoJavascript = self.getJavascript()
         saveFile(fileName, videoJavascript)
+
+    @staticmethod
+    def showPlayers(blocking=True):
+        try:
+            pylab.plt.show(blocking)
+        except AttributeError:
+            print('Videofig encountered a playback error.')
+            print('This is usually due to a videofig window getting closed during animation playback...')
+            print('This causes all open videofig windows to malfunction.')
+            print('Closing all videofig windows...')
+            pylab.plt.close('all')
+            pass
