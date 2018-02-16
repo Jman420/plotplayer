@@ -45,9 +45,9 @@ pip install <path to plotplayer repo root>
 # Usage
 # Basic Usage
 ```python
-player = plotplayer("Dummy Animation")
+player = PlotPlayer("Dummy Animation")
 player.initializeAnimation(100, drawFunc)
-plotplayer.showPlayers()
+PlotPlayer.showPlayers()
 ```
 This will display a plotplayer window associated with 100 frames of animation drawn by the drawFunc()
 method.  The player will wait for user input to begin playback.  A call to the plotplayer.showPlayers()
@@ -59,25 +59,25 @@ plotplayer.showPlayers() either with no parameters or the parameter True.
 
 ## Automatic Playback
 ```python
-player = plotplayer("Dummy Animation")
+player = PlotPlayer("Dummy Animation")
 player.initializeAnimation(100, drawFunc)
 player.play()
-plotplayer.showPlayers()
+PlotPlayer.showPlayers()
 ```
 This will auto playback 100 frames of animation drawn by the drawFunc() method.
 
 ## Multiple Simultaneous Playbacks
 ```python
-player1 = plotplayer("Dummy Animation 1")
+player1 = PlotPlayer("Dummy Animation 1")
 player1.initializeAnimation(50, drawFunc)
 
-player2 = plotplayer("Dummy Animation 2")
+player2 = PlotPlayer("Dummy Animation 2")
 player2.initializeAnimation(100, drawFunc)
 
 player1.play()
 player2.play()
 
-plotplayer.showPlayers()
+PlotPlayer.showPlayers()
 ```
 When displaying multiple simultaneous playbacks if an error is encountered all playback windows
 will be closed due to unexpected behavior.  It is highly recommended to stop playback before
@@ -86,9 +86,9 @@ closing any of the playback windows to avoid these types of errors.
 ## Pre-Created Figure
 ```python
 figure = matplotlib.pylab.plt.figure()
-player = plotplayer("Dummy Animation", figure)
+player = PlotPlayer("Dummy Animation", figure)
 player.initializeAnimation(100, drawFunc)
-plotplayer.showPlayers()
+PlotPlayer.showPlayers()
 ```
 The pre-created figure must be of type matplotlib.figure.Figure.  If no axes are present on the
 figure then one will be added as the animation canvas.  If axes exist then the current axes is
@@ -101,9 +101,9 @@ def keyPressHandler(eventData):
     print(eventData)
     return False
 
-player = plotplayer("Dummy Animation", keyPressHandler=keyPressHandler)
+player = PlotPlayer("Dummy Animation", keyPressHandler=keyPressHandler)
 player.initializeAnimation(100, drawFunc)
-plotplayer.showPlayers()
+PlotPlayer.showPlayers()
 ```
 A Custom Key Press Handler can override Default Keyboard Shortcuts by returning True.  This
 indicates to plotplayer that the key press has been handled and to stop processing the event.
