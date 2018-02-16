@@ -1,1 +1,1 @@
-from .plotplayer import plotplayer
+from .plotplayer import PlotPlayer
