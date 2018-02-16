@@ -7,12 +7,12 @@ from matplotlib.widgets import Slider
 from matplotlib.figure import Figure
 import tkinter.constants as Tkinter
 
-WINDOW_SIZE=(8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9
+WINDOW_SIZE=(8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
 IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
 SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
 SLIDER_BACKGROUND_COLOR = 'lightgoldenrodyellow'
 
-ANIMATION_NAME = 'plotplayer'
+ANIMATION_NAME = 'PlotPlayer'
 
 SKIP_BACK_BUTTON = 'left'
 SKIP_AHEAD_BUTTON = 'right'
@@ -53,7 +53,7 @@ def assertIsInt(value, variableName):
 def assertIsFunction(value, variableName):
     assert callable(value), name + ' must be a callable function'
 
-class plotplayer(object):
+class PlotPlayer(object):
     '''Lightweight function based animation player for Matplotlib'''
     _figure = _animationName = None
     _animationAxes = _frameRate = None
