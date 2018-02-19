@@ -53,16 +53,16 @@ class InputHandler(object):
         if self._saveButtonPressed:
             animationName = plotPlayer._animationName
             if key == SAVE_VIDEO_BUTTON:
-                plotPlayer.saveVideo(animationName + VIDEO_EXTENSION)
+                plotPlayer.saveVideo()
             elif key == SAVE_HTML_BUTTON:
-                plotPlayer.saveHtml(animationName + HTML_EXTENSION)
+                plotPlayer.saveHtml()
             elif key == SAVE_JAVASCRIPT_BUTTON:
-                plotPlayer.saveJavascript(animationName + JAVASCRIPT_EXTENSION)
+                plotPlayer.saveJavascript()
 
         if key in KEYS_TRIGGER_STOP:
             plotPlayer.stop()
 
-        currentFrame = int(self._slider.val)
+        currentFrame = plotPlayer.getCurrentFrameNumber()
         if key == SKIP_BACK_BUTTON:
             plotPlayer.render(currentFrame - self._skipSize)
         elif key == SKIP_AHEAD_BUTTON:
@@ -74,7 +74,7 @@ class InputHandler(object):
         elif key == GOTO_BEGINNING_BUTTON:
             plotPlayer.render(0)
         elif key == GOTO_END_BUTTON:
-            plotPlayer.render(self._slider.valmax)
+            plotPlayer.render(plotPlayer.getTotalFrames())
         elif key == TOGGLE_SLIDER_BUTTON:
             plotPlayer.toggleSlider()
         elif key in TOGGLE_PLAY_BUTTON:
@@ -98,7 +98,7 @@ class InputHandler(object):
             return
 
         plotPlayer = self._plotPlayer
-        if eventData.inaxes == plotPlayer._sliderAxes:
+        if eventData.inaxes == plotPlayer._renderHandler._sliderAxes:
             plotPlayer.stop()
 
     def setEnabled(self, enabled):

@@ -1,4 +1,5 @@
 from matplotlib.widgets import Slider
+import tkinter.constants as Tkinter
 
 IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
 SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
@@ -12,9 +13,10 @@ class RenderHandler(object):
     _playerFigure = None
     _animationAxes = _renderFunc = None
     _sliderAxes = _slider = None
+    _sliderVisible = _toolbarVisible = False
 
     def __init__(self, playerFigure, animationAxes=None, sliderAxes=None, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR,
-                sliderVisible=False):
+                sliderVisible=True, toolbarVisible=False):
         self._playing = False
         self._playerFigure = playerFigure
 
@@ -27,14 +29,12 @@ class RenderHandler(object):
             sliderAxes = self._playerFigure.add_axes(SLIDER_AXES_RECT, facecolor=sliderBackgroundColor)
         self._sliderAxes = sliderAxes
 
-        self._slider = Slider(self._sliderAxes, '', 0, 1, valinit=0.0)
-        self._slider.on_changed(self.handleSliderChanged)
-
         self.setSliderVisible(sliderVisible)
+        self.setToolbarVisible(toolbarVisible)
 
     def initializeRendering(self, totalFrames, renderFunc):
-        self._slider.valmax = totalFrames
-        self._slider.reset()
+        self._slider = Slider(self._sliderAxes, '', 0, totalFrames + 1, valinit=0.0)
+        self._slider.on_changed(self.handleSliderChanged)
 
         self._renderFunc = renderFunc
 
@@ -59,6 +59,19 @@ class RenderHandler(object):
 
     def setSliderVisible(self, visible):
         self._sliderAxes.set_visible(visible)
+        self._playerFigure.canvas.draw()
+        self._sliderVisible = visible
 
     def toggleSlider(self):
-        self.setSliderVisible(~self._sliderAxes.get_visible())
+        self.setSliderVisible(not self._sliderVisible)
+
+    def setToolbarVisible(self, visible):
+        if visible:
+            self._playerFigure.canvas.toolbar.pack(side=Tkinter.BOTTOM, fill=Tkinter.X)
+        else:
+            self._playerFigure.canvas.toolbar.pack_forget()
+
+        self._toolbarVisible = visible
+
+    def toggleToolbar(self):
+        self.setToolbarVisible(not self._toolbarVisible)

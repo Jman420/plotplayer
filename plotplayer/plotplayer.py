@@ -1,7 +1,6 @@
 import matplotlib.pylab as pylab
 
 from matplotlib.animation import FuncAnimation
-import tkinter.constants as Tkinter
 
 import typeValidation
 import helpers.fileHelper as fileHelper
@@ -28,7 +27,7 @@ class PlotPlayer(object):
     _renderHandler = _inputHandler = None
     _animationName = _animation = None
     _frameRate = None
-    _playing = _toolbarVisible = False
+    _playing = False
 
     def __init__(self, windowTitle=None, figure=None, windowSize=DEFAULT_WINDOW_SIZE, sliderBackgroundColor=renderHandler.SLIDER_BACKGROUND_COLOR,
                 toolbarVisible=False, sliderVisible=True, keyPressHandler=None, skipSize=inputHandler.SKIP_SIZE, jumpSize=inputHandler.JUMP_SIZE):
@@ -36,8 +35,6 @@ class PlotPlayer(object):
             figure = pylab.plt.figure(figsize=windowSize)
         typeValidation.assertIsFigure(figure, 'figure')
         self._figure = figure
-
-        self.setToolbarVisible(toolbarVisible)
 
         if windowTitle == None:
             windowTitle = DEFAULT_ANIMATION_NAME
@@ -49,7 +46,7 @@ class PlotPlayer(object):
             animationAxes = figure.axes[0]
         if len(figure.axes) > 1:
             sliderAxes = figure.axes[1]
-        self._renderHandler = renderHandler.RenderHandler(figure, animationAxes, sliderAxes, sliderBackgroundColor, sliderVisible)
+        self._renderHandler = renderHandler.RenderHandler(figure, animationAxes, sliderAxes, sliderBackgroundColor, sliderVisible, toolbarVisible)
 
         self._inputHandler = inputHandler.InputHandler(self, keyPressHandler, skipSize, jumpSize)
 
@@ -60,6 +57,7 @@ class PlotPlayer(object):
 
         self.stop()
         self._renderHandler.initializeRendering(totalFrames, drawFunc)
+        self._inputHandler.setEnabled(True)
 
         self._animationName = animationName
         self._frameRate = frameRate
@@ -67,6 +65,9 @@ class PlotPlayer(object):
 
     def render(self, frameNumber):
         self._renderHandler.render(frameNumber)
+
+        if frameNumber == self.getTotalFrames():
+            self.stop()
 
     def play(self):
         if self._playing:
@@ -96,16 +97,17 @@ class PlotPlayer(object):
         else:
             self.play()
 
-    def setToolbarVisible(self, visible):
-        if visible:
-            self._figure.canvas.toolbar.pack(side=Tkinter.BOTTOM, fill=Tkinter.X)
-        else:
-            self._figure.canvas.toolbar.pack_forget()
+    def getCurrentFrameNumber(self):
+        return int(self._renderHandler._slider.val)
 
-        self._toolbarVisible = visible
+    def getTotalFrames(self):
+        return int(self._renderHandler._slider.valmax)
 
     def toggleToolbar(self):
-        self.setToolbarVisible(~self._toolbarVisible)
+        self._renderHandler.toggleToolbar()
+
+    def toggleSlider(self):
+        self._renderHandler.toggleSlider()
 
     def getHtml(self):
         html = self._animation.to_html5_video()
@@ -115,28 +117,31 @@ class PlotPlayer(object):
         javascript = self._animation.to_jshtml()
         return javascript
 
-    def saveVideo(self, defaultFileName, writer=None):
+    def saveVideo(self, fileName=None, writer=None):
         self.stop()
 
-        saveFileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, defaultFileName,
-                                                   [ VIDEO_FILE_TYPE, uiHelper.ALL_FILES_TYPE ], VIDEO_EXTENSION)
-        self._animation.save(saveFileName, writer)
+        if fileName == None:
+            fileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + VIDEO_EXTENSION,
+                                                    [ VIDEO_FILE_TYPE, uiHelper.ALL_FILES_TYPE ], VIDEO_EXTENSION)
+        self._animation.save(fileName, writer)
 
-    def saveHtml(self, defaultFileName):
+    def saveHtml(self, fileName=None):
         self.stop()
 
-        saveFileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, defaultFileName,
+        if fileName == None:
+            fileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + HTML_EXTENSION,
                                                    [ HTML_FILE_TYPE, uiHelper.ALL_FILES_TYPE ], HTML_EXTENSION)
         videoHtml = self.getHtml()
-        fileHelper.saveFile(saveFileName, videoHtml)
+        fileHelper.saveFile(fileName, videoHtml)
 
-    def saveJavascript(self, defaultFileName):
+    def saveJavascript(self, fileName=None):
         self.stop()
 
-        saveFileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, defaultFileName,
+        if fileName == None:
+            fileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + JAVASCRIPT_EXTENSION,
                                                    [ JAVASCRIPT_FILE_TYPE, uiHelper.ALL_FILES_TYPE ], JAVASCRIPT_EXTENSION)
         videoJavascript = self.getJavascript()
-        fileHelper.saveFile(saveFileName, videoJavascript)
+        fileHelper.saveFile(fileName, videoJavascript)
 
     @staticmethod
     def showPlayers(blocking=True):
