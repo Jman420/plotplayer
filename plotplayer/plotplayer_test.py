@@ -1,6 +1,6 @@
 import numpy
 
-from plotplayer import PlotPlayer
+from player.plotplayer import PlotPlayer
 
 def redraw_fn(frameNumber, axes):
     amp = float(frameNumber) / 3000

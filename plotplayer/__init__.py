@@ -1,2 +1,0 @@
-import plotplayer.typeValidation
-from plotplayer.plotplayer import PlotPlayer

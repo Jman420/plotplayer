@@ -2,11 +2,11 @@ import matplotlib.pylab as pylab
 
 from matplotlib.animation import FuncAnimation
 
-import typeValidation
-import helpers.fileHelper as fileHelper
-import helpers.uiHelper as uiHelper
-import ui.renderHandler as renderHandler
-import ui.inputHandler as inputHandler
+import plotplayer.validators.typeValidation as typeValidation
+import plotplayer.helpers.fileHelper as fileHelper
+import plotplayer.helpers.uiHelper as uiHelper
+import plotplayer.ui.renderHandler as renderHandler
+import plotplayer.ui.inputHandler as inputHandler
 
 DEFAULT_WINDOW_SIZE = (8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
 DEFAULT_ANIMATION_NAME = 'PlotPlayer'
@@ -99,6 +99,9 @@ class PlotPlayer(object):
 
     def getFigure(self):
         return self._figure
+
+    def getAnimationAxes(self):
+        return self._renderHandler._animationAxes
 
     def getCurrentFrameNumber(self):
         return int(self._renderHandler._slider.val)

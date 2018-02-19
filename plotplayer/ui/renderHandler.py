@@ -33,7 +33,7 @@ class RenderHandler(object):
         self.setToolbarVisible(toolbarVisible)
 
     def initializeRendering(self, totalFrames, renderFunc):
-        self._slider = Slider(self._sliderAxes, '', 0, totalFrames + 1, valinit=0.0)
+        self._slider = Slider(self._sliderAxes, str(), 0, totalFrames - 1, valinit=0.0)
         self._slider.on_changed(self.handleSliderChanged)
 
         self._renderFunc = renderFunc
