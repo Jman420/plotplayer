@@ -21,7 +21,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="io\ioHelper.py">
+    <Compile Include="io\fileHelper.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="io\__init__.py">
@@ -31,10 +31,13 @@
     <Compile Include="plotplayer_test.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\animationHandler.py">
+    <Compile Include="typeValidation.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\inputHandler.py">
+    <Compile Include="ui\renderHandler.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="io\inputHandler.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ui\uiHelper.py">

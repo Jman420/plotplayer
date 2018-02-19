@@ -1,4 +1,3 @@
-from .inputHandler import ImportHandler
-from .animationHandler import AnimationHandler
+from .renderHandler import RenderHandler
 
 import uiHelper
