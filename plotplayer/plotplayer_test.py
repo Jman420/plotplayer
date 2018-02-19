@@ -15,7 +15,6 @@ def redraw_fn(frameNumber, axes):
 redraw_fn.initialized = False
 
 video1 = PlotPlayer()
-video1.hideToolbar()
 video1.initializeAnimation(100, redraw_fn)
 video1.play()
 

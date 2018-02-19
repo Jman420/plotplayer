@@ -4,10 +4,10 @@ from matplotlib.animation import FuncAnimation
 import tkinter.constants as Tkinter
 
 import typeValidation
-import io.fileHelper as fileHelper
-import ui.uiHelper as uiHelper
-from ui.renderHandler import RenderHandler
-from io.inputHandler import InputHandler
+import helpers.fileHelper as fileHelper
+import helpers.uiHelper as uiHelper
+import ui.renderHandler as renderHandler
+import ui.inputHandler as inputHandler
 
 DEFAULT_WINDOW_SIZE = (8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
 DEFAULT_ANIMATION_NAME = 'PlotPlayer'
@@ -27,10 +27,11 @@ class PlotPlayer(object):
     _figure = None
     _renderHandler = _inputHandler = None
     _animationName = _animation = None
+    _frameRate = None
     _playing = _toolbarVisible = False
 
-    def __init__(self, windowTitle=None, figure=None, windowSize=DEFAULT_WINDOW_SIZE, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR,
-                toolbarVisible=False, sliderVisible=True, keyPressHandler=None, skipSize=SKIP_SIZE, jumpSize=JUMP_SIZE):
+    def __init__(self, windowTitle=None, figure=None, windowSize=DEFAULT_WINDOW_SIZE, sliderBackgroundColor=renderHandler.SLIDER_BACKGROUND_COLOR,
+                toolbarVisible=False, sliderVisible=True, keyPressHandler=None, skipSize=inputHandler.SKIP_SIZE, jumpSize=inputHandler.JUMP_SIZE):
         if figure == None:
             figure = pylab.plt.figure(figsize=windowSize)
         typeValidation.assertIsFigure(figure, 'figure')
@@ -48,18 +49,20 @@ class PlotPlayer(object):
             animationAxes = figure.axes[0]
         if len(figure.axes) > 1:
             sliderAxes = figure.axes[1]
-        self._renderHandler = RenderHandler(figure, animationAxes, sliderAxes, sliderBackgroundColor, sliderVisible)
+        self._renderHandler = renderHandler.RenderHandler(figure, animationAxes, sliderAxes, sliderBackgroundColor, sliderVisible)
 
-        self._inputHandler = InputHandler(self, keyPressHandler, skipSize, jumpSize)
+        self._inputHandler = inputHandler.InputHandler(self, keyPressHandler, skipSize, jumpSize)
 
     def initializeAnimation(self, totalFrames, drawFunc, animationName=DEFAULT_ANIMATION_NAME, frameRate=30):
         typeValidation.assertIsInt(totalFrames, 'totalFrames')
         typeValidation.assertIsFunction(drawFunc, 'drawFunc')
         typeValidation.assertIsInt(frameRate, 'frameRate')
 
+        self.stop()
         self._renderHandler.initializeRendering(totalFrames, drawFunc)
 
         self._animationName = animationName
+        self._frameRate = frameRate
         self._playing = False
 
     def render(self, frameNumber):
@@ -134,3 +137,7 @@ class PlotPlayer(object):
                                                    [ JAVASCRIPT_FILE_TYPE, uiHelper.ALL_FILES_TYPE ], JAVASCRIPT_EXTENSION)
         videoJavascript = self.getJavascript()
         fileHelper.saveFile(saveFileName, videoJavascript)
+
+    @staticmethod
+    def showPlayers(blocking=True):
+        uiHelper.showPlayers(blocking)
