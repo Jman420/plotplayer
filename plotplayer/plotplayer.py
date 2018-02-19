@@ -1,13 +1,14 @@
+from tkinter import filedialog
+
 import matplotlib
 import matplotlib.pylab as pylab
 
-import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 from matplotlib.widgets import Slider
 from matplotlib.figure import Figure
 import tkinter.constants as Tkinter
 
-WINDOW_SIZE=(8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
+DEFAULT_WINDOW_SIZE = (8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
 IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
 SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
 SLIDER_BACKGROUND_COLOR = 'lightgoldenrodyellow'
@@ -21,8 +22,9 @@ JUMP_AHEAD_BUTTON = 'up'
 TOGGLE_PLAY_BUTTON = [ ' ', 'enter' ]
 GOTO_BEGINNING_BUTTON = 'home'
 GOTO_END_BUTTON = 'end'
-TOGGLE_TOOLBAR_BUTTON = 't'
-SAVE_BUTTON = 's'
+TOGGLE_SLIDER_BUTTON = 't'
+TOGGLE_TOOLBAR_BUTTON = 'm'
+SAVE_BUTTON = 'd'
 SAVE_VIDEO_BUTTON = 'v'
 SAVE_HTML_BUTTON = 'h'
 SAVE_JAVASCRIPT_BUTTON = 'j'
@@ -30,14 +32,25 @@ SAVE_JAVASCRIPT_BUTTON = 'j'
 KEYS_TRIGGER_STOP = [ SKIP_BACK_BUTTON, SKIP_AHEAD_BUTTON, JUMP_BACK_BUTTON, JUMP_AHEAD_BUTTON,
                      GOTO_BEGINNING_BUTTON, GOTO_END_BUTTON ]
 
-VIDEO_SUFFIX = '.mp4'
-HTML_SUFFIX = '.html'
-JAVASCRIPT_SUFFIX = '-js.html'
+VIDEO_EXTENSION = '.mp4'
+HTML_EXTENSION = '.html'
+JAVASCRIPT_EXTENSION = '.js.html'
+ALL_FILES_EXTENSION = '*.*'
+
+SAVE_DIALOG_TITLE = 'Select video file to save'
+
+VIDEO_FILE_TYPE = [ 'MP4 Video', '*{}'.format(VIDEO_EXTENSION) ]
+HTML_FILE_TYPE = [ 'HTML File', '*{}'.format(HTML_EXTENSION) ]
+JAVASCRIPT_FILE_TYPE = [ 'Javascript HTML File', '*{}'.format(JAVASCRIPT_EXTENSION) ]
+ALL_FILES_TYPE = [ 'All Files', ALL_FILES_EXTENSION ]
 
 SKIP_SIZE = 1
 JUMP_SIZE = 10
 
-pylab.plt.rcParams['keymap.save'].remove(SAVE_BUTTON)
+def getSaveDialogResult(title, defaultFileName, fileTypes=[ ALL_FILES_TYPE ], defaultExtension=ALL_FILES_EXTENSION):
+    saveFileName = filedialog.asksaveasfilename(title=title, filetypes=fileTypes,
+                                               defaultextension=defaultExtension, initialfile=defaultFileName)
+    return saveFileName
 
 def saveFile(fileName, data):
     file = open(fileName, 'w')
@@ -54,18 +67,18 @@ def assertIsFunction(value, variableName):
     assert callable(value), name + ' must be a callable function'
 
 class PlotPlayer(object):
-    '''Lightweight function based animation player for Matplotlib'''
+    '''Function based animation player for Matplotlib'''
     _figure = _animationName = None
     _animationAxes = _frameRate = None
     _sliderAxes = _slider = None
     _animation = _playing = None
     _drawFunc = _keyPressHandler = None
     _skipSize = _jumpSize = None
-    _toolbarHidden = _playing = False
+    _toolbarVisible = _playing = False
     _saveButtonPressed = False
 
-    def __init__(self, windowTitle=None, figure=None, windowSize=WINDOW_SIZE, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR, hideToolbar=True,
-                keyPressHandler=None, skipSize=SKIP_SIZE, jumpSize=JUMP_SIZE):
+    def __init__(self, windowTitle=None, figure=None, windowSize=DEFAULT_WINDOW_SIZE, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR,
+                hideToolbar=True, hideSlider=False, keyPressHandler=None, skipSize=SKIP_SIZE, jumpSize=JUMP_SIZE):
         if figure == None:
             figure = pylab.plt.figure(figsize=windowSize)
         assertIsFigure(figure, 'figure')
@@ -92,6 +105,9 @@ class PlotPlayer(object):
 
         if hideToolbar:
             self.hideToolbar()
+
+        if hideSlider:
+            self.hideSlider()
 
     def initializeAnimation(self, totalFrames, drawFunc, animationName=ANIMATION_NAME, frameRate=30):
         assertIsInt(totalFrames, 'totalFrames')
@@ -156,19 +172,22 @@ class PlotPlayer(object):
         else:
             self.play()
 
-    def hideToolbar(self):
-        self._figure.canvas.toolbar.pack_forget()
-        self._toolbarHidden = True
+    def setToolbarVisible(self, visible):
+        if visible:
+            self._figure.canvas.toolbar.pack(side=Tkinter.BOTTOM, fill=Tkinter.X)
+        else:
+            self._figure.canvas.toolbar.pack_forget()
 
-    def showToolbar(self):
-        self._figure.canvas.toolbar.pack(side=Tkinter.BOTTOM, fill=Tkinter.X)
-        self._toolbarHidden = False
+        self._toolbarVisible = visible
 
     def toggleToolbar(self):
-        if self._toolbarHidden:
-            self.showToolbar()
-        else:
-            self.hideToolbar()
+        self.setToolbarVisible(~self._toolbarVisible)
+
+    def setSliderVisible(self, visible):
+        self._sliderAxes.set_visible(visible)
+
+    def toggleSlider(self):
+        self.setSliderVisible(~self._sliderAxes.get_visible())
 
     def handleKeyPress(self, eventData):
         if not self._keyPressHandler == None and self._keyPressHandler(eventData) == True:
@@ -178,11 +197,11 @@ class PlotPlayer(object):
         if self._saveButtonPressed:
             animationName = self._animationName
             if key == SAVE_VIDEO_BUTTON:
-                self.saveVideo(animationName + VIDEO_SUFFIX)
+                self.saveVideo(animationName + VIDEO_EXTENSION)
             elif key == SAVE_HTML_BUTTON:
-                self.saveHtml(animationName + HTML_SUFFIX)
+                self.saveHtml(animationName + HTML_EXTENSION)
             elif key == SAVE_JAVASCRIPT_BUTTON:
-                self.saveJavascript(animationName + JAVASCRIPT_SUFFIX)
+                self.saveJavascript(animationName + JAVASCRIPT_EXTENSION)
 
         if key in KEYS_TRIGGER_STOP:
             self.stop()
@@ -200,6 +219,8 @@ class PlotPlayer(object):
             self.render(0)
         elif key == GOTO_END_BUTTON:
             self.render(self._slider.valmax)
+        elif key == TOGGLE_SLIDER_BUTTON:
+            self.toggleSlider()
         elif key in TOGGLE_PLAY_BUTTON:
             self.togglePlayback()
         elif key == TOGGLE_TOOLBAR_BUTTON:
@@ -225,16 +246,25 @@ class PlotPlayer(object):
         javascript = self._animation.to_jshtml()
         return javascript
 
-    def saveVideo(self, fileName, writer=None):
-        self._animation.save(fileName, writer)
+    def saveVideo(self, defaultFileName, writer=None):
+        self.stop()
 
-    def saveHtml(self, fileName):
+        saveFileName = getSaveDialogResult(SAVE_DIALOG_TITLE, defaultFileName, [ VIDEO_FILE_TYPE, ALL_FILES_TYPE ], VIDEO_EXTENSION)
+        self._animation.save(saveFileName, writer)
+
+    def saveHtml(self, defaultFileName):
+        self.stop()
+
+        saveFileName = getSaveDialogResult(SAVE_DIALOG_TITLE, defaultFileName, [ HTML_FILE_TYPE, ALL_FILES_TYPE ], HTML_EXTENSION)
         videoHtml = self.getHtml()
-        saveFile(fileName, videoHtml)
+        saveFile(saveFileName, videoHtml)
 
-    def saveJavascript(self, fileName):
+    def saveJavascript(self, defaultFileName):
+        self.stop()
+
+        saveFileName = getSaveDialogResult(SAVE_DIALOG_TITLE, defaultFileName, [ JAVASCRIPT_FILE_TYPE, ALL_FILES_TYPE ], JAVASCRIPT_EXTENSION)
         videoJavascript = self.getJavascript()
-        saveFile(fileName, videoJavascript)
+        saveFile(saveFileName, videoJavascript)
 
     @staticmethod
     def showPlayers(blocking=True):

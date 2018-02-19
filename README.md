@@ -1,5 +1,5 @@
 # plotplayer
-Lightweight function based animation player for Matplotlib
+Function based animation player for Matplotlib
 
 # Description
 This is a complete re-write of bilylee's videofig project (https://github.com/bilylee/videofig) with
@@ -18,7 +18,8 @@ a focus on Object Oriented Principles, as well as some additional features for c
 - Pip scripts for easy installation
 
 # Keyboard Shortcuts
-* Toggle Toolbar - T
+* Toggle Slider - T
+* Toggle Toolbar - M
 * Toggle Playback - Space/Enter
 * Skip Ahead - Right
 * Skip Back - Left
@@ -26,13 +27,21 @@ a focus on Object Oriented Principles, as well as some additional features for c
 * Jump Back - Down
 * Jump to Beginning - Home
 * Jump to End - End
+* Save Video - D + File Selection Key (see below)
 
 # Saving as Video
-To save an animation as a video press and hold the 's' key and then press one of the following keys
+To save an animation as a video press and hold the 'D' key and then press one of the following keys
 to select the output format:
 * V - mp4 video using ffmpeg (must have ffmpeg installed)
 * H - HTML5 video
 * J - Javascript video
+
+A save file dialog will appear to prompt you for the name of the file to save.  (Note : allow a few
+seconds for the dialog to load on the first save)
+
+# Matplotlib Interactive Navigation Controls
+See https://matplotlib.org/users/navigation_toolbar.html for details including Matplotlib keyboard
+shortcuts.
 
 # Installation
 plotplayer includes pip scripts to handle installation into the Python Environment.  First clone the
