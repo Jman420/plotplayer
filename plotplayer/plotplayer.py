@@ -97,6 +97,9 @@ class PlotPlayer(object):
         else:
             self.play()
 
+    def getFigure(self):
+        return self._figure
+
     def getCurrentFrameNumber(self):
         return int(self._renderHandler._slider.val)
 

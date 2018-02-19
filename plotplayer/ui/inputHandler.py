@@ -36,10 +36,10 @@ class InputHandler(object):
         self._saveButtonPressed = False
         self.setEnabled(enabled)
 
-        canvas = self._plotPlayer._figure.canvas
-        canvas.mpl_connect('button_press_event', self.handleMouseButtonDown)
-        canvas.mpl_connect('key_press_event', self.handleKeyPress)
-        canvas.mpl_connect('key_release_event', self.handleKeyRelease)
+        figure = self._plotPlayer.getFigure()
+        figure.canvas.mpl_connect('button_press_event', self.handleMouseButtonDown)
+        figure.canvas.mpl_connect('key_press_event', self.handleKeyPress)
+        figure.canvas.mpl_connect('key_release_event', self.handleKeyRelease)
 
     def handleKeyPress(self, eventData):
         if not self._handlerEnabled:

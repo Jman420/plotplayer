@@ -6,7 +6,7 @@ This is a complete re-write of bilylee's videofig project (https://github.com/bi
 a focus on Object Oriented Principles, as well as some additional features for convenience.
 
 # Features
-- Support pre-created Matplotlib Figure and Axis as animation canvas
+- Support pre-created Matplotlib Figure and Axes as animation canvas
 - Support multiple semi-independent simultaneous playbacks (see Usage section below)
 - Support scrubbing via Slider and Keyboard Shortcuts during playback
 - Support saving animation as video, html and javascript
@@ -37,7 +37,7 @@ to select the output format:
 * J - Javascript video
 
 A save file dialog will appear to prompt you for the name of the file to save.  (Note : allow a few
-seconds for the dialog to load on the first save)
+seconds for the dialog to load)
 
 # Matplotlib Interactive Navigation Controls
 See https://matplotlib.org/users/navigation_toolbar.html for details including Matplotlib keyboard
