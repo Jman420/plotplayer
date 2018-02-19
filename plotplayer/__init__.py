@@ -1,1 +1,2 @@
-from .plotplayer import PlotPlayer
+import plotplayer.typeValidation
+from plotplayer.plotplayer import PlotPlayer

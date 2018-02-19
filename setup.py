@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='plotplayer',
-      version='3.0.0',
+      version='4.0.0',
       description='Lightweight function based animation player for Matplotlib',
       url='https://github.com/Jman420/plotplayer',
       author='Justin Giannone',

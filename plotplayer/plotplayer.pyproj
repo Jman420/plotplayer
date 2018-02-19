@@ -21,11 +21,37 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="helpers\fileHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="helpers\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="plotplayer.py" />
     <Compile Include="plotplayer_test.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="typeValidation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ui\renderHandler.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ui\inputHandler.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="helpers\uiHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ui\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="C:\J Stash\Projects\plotplayer\src\plotplayer\helpers\" />
+    <Folder Include="helpers\" />
+    <Folder Include="ui\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
