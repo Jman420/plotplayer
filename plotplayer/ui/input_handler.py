@@ -1,5 +1,3 @@
-import plotplayer.helpers.uiHelper as uiHelper
-
 SKIP_BACK_BUTTON = 'left'
 SKIP_AHEAD_BUTTON = 'right'
 JUMP_BACK_BUTTON = 'down'

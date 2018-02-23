@@ -1,2 +1,2 @@
-from .inputHandler import InputHandler
-from .renderHandler import RenderHandler
+from .input_handler import InputHandler
+from .render_handler import RenderHandler

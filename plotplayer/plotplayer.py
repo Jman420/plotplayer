@@ -1,12 +1,12 @@
-import matplotlib.pylab as pylab
+from matplotlib.pylab import plt
 
 from matplotlib.animation import FuncAnimation
 
-import plotplayer.validators.typeValidation as typeValidation
-import plotplayer.helpers.fileHelper as fileHelper
-import plotplayer.helpers.uiHelper as uiHelper
-import plotplayer.ui.renderHandler as renderHandler
-import plotplayer.ui.inputHandler as inputHandler
+from plotplayer.validators import type_validation
+from plotplayer.helpers import file_helper
+from plotplayer.helpers import ui_helper
+from plotplayer.ui import render_handler
+from plotplayer.ui import input_handler
 
 DEFAULT_WINDOW_SIZE = (8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
 DEFAULT_ANIMATION_NAME = 'PlotPlayer'
@@ -29,11 +29,11 @@ class PlotPlayer(object):
     _frameRate = None
     _playing = False
 
-    def __init__(self, windowTitle=None, figure=None, windowSize=DEFAULT_WINDOW_SIZE, sliderBackgroundColor=renderHandler.SLIDER_BACKGROUND_COLOR,
-                toolbarVisible=False, sliderVisible=True, keyPressHandler=None, skipSize=inputHandler.SKIP_SIZE, jumpSize=inputHandler.JUMP_SIZE):
+    def __init__(self, windowTitle=None, figure=None, windowSize=DEFAULT_WINDOW_SIZE, sliderBackgroundColor=render_handler.SLIDER_BACKGROUND_COLOR,
+                toolbarVisible=False, sliderVisible=True, keyPressHandler=None, skipSize=input_handler.SKIP_SIZE, jumpSize=input_handler.JUMP_SIZE):
         if figure == None:
-            figure = pylab.plt.figure(figsize=windowSize)
-        typeValidation.assertIsFigure(figure, 'figure')
+            figure = plt.figure(figsize=windowSize)
+        type_Validation.assertIsFigure(figure, 'figure')
         self._figure = figure
 
         if windowTitle == None:
@@ -46,14 +46,14 @@ class PlotPlayer(object):
             animationAxes = figure.axes[0]
         if len(figure.axes) > 1:
             sliderAxes = figure.axes[1]
-        self._renderHandler = renderHandler.RenderHandler(figure, animationAxes, sliderAxes, sliderBackgroundColor, sliderVisible, toolbarVisible)
+        self._renderHandler = render_handler.RenderHandler(figure, animationAxes, sliderAxes, sliderBackgroundColor, sliderVisible, toolbarVisible)
 
-        self._inputHandler = inputHandler.InputHandler(self, keyPressHandler, skipSize, jumpSize)
+        self._inputHandler = input_handler.InputHandler(self, keyPressHandler, skipSize, jumpSize)
 
     def initializeAnimation(self, totalFrames, drawFunc, animationName=DEFAULT_ANIMATION_NAME, frameRate=30):
-        typeValidation.assertIsInt(totalFrames, 'totalFrames')
-        typeValidation.assertIsFunction(drawFunc, 'drawFunc')
-        typeValidation.assertIsInt(frameRate, 'frameRate')
+        type_Validation.assertIsInt(totalFrames, 'totalFrames')
+        type_Validation.assertIsFunction(drawFunc, 'drawFunc')
+        type_Validation.assertIsInt(frameRate, 'frameRate')
 
         self.stop()
         self._renderHandler.initializeRendering(totalFrames, drawFunc)
@@ -127,28 +127,28 @@ class PlotPlayer(object):
         self.stop()
 
         if fileName == None:
-            fileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + VIDEO_EXTENSION,
-                                                    [ VIDEO_FILE_TYPE, uiHelper.ALL_FILES_TYPE ], VIDEO_EXTENSION)
+            fileName = ui_helper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + VIDEO_EXTENSION,
+                                                    [ VIDEO_FILE_TYPE, ui_helper.ALL_FILES_TYPE ], VIDEO_EXTENSION)
         self._animation.save(fileName, writer)
 
     def saveHtml(self, fileName=None):
         self.stop()
 
         if fileName == None:
-            fileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + HTML_EXTENSION,
-                                                   [ HTML_FILE_TYPE, uiHelper.ALL_FILES_TYPE ], HTML_EXTENSION)
+            fileName = ui_helper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + HTML_EXTENSION,
+                                                   [ HTML_FILE_TYPE, ui_helper.ALL_FILES_TYPE ], HTML_EXTENSION)
         videoHtml = self.getHtml()
-        fileHelper.saveFile(fileName, videoHtml)
+        file_helper.saveFile(fileName, videoHtml)
 
     def saveJavascript(self, fileName=None):
         self.stop()
 
         if fileName == None:
-            fileName = uiHelper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + JAVASCRIPT_EXTENSION,
-                                                   [ JAVASCRIPT_FILE_TYPE, uiHelper.ALL_FILES_TYPE ], JAVASCRIPT_EXTENSION)
+            fileName = ui_helper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + JAVASCRIPT_EXTENSION,
+                                                   [ JAVASCRIPT_FILE_TYPE, ui_helper.ALL_FILES_TYPE ], JAVASCRIPT_EXTENSION)
         videoJavascript = self.getJavascript()
-        fileHelper.saveFile(fileName, videoJavascript)
+        file_helper.saveFile(fileName, videoJavascript)
 
     @staticmethod
     def showPlayers(blocking=True):
-        uiHelper.showPlayers(blocking)
+        ui_helper.showPlayers(blocking)

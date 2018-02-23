@@ -1,5 +1,5 @@
 from matplotlib.widgets import Slider
-import tkinter.constants as Tkinter
+from tkinter.constants import BOTTOM, X
 
 IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
 SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
@@ -67,7 +67,7 @@ class RenderHandler(object):
 
     def setToolbarVisible(self, visible):
         if visible:
-            self._playerFigure.canvas.toolbar.pack(side=Tkinter.BOTTOM, fill=Tkinter.X)
+            self._playerFigure.canvas.toolbar.pack(side=BOTTOM, fill=X)
         else:
             self._playerFigure.canvas.toolbar.pack_forget()
 

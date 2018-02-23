@@ -21,29 +21,26 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="helpers\fileHelper.py">
+    <Compile Include="helpers\file_helper.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="player\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="player\plotplayer.py" />
+    <Compile Include="plotplayer.py" />
     <Compile Include="plotplayer_test.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="validators\typeValidation.py">
+    <Compile Include="validators\type_validation.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\renderHandler.py">
+    <Compile Include="ui\render_handler.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\inputHandler.py">
+    <Compile Include="ui\input_handler.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="helpers\uiHelper.py">
+    <Compile Include="helpers\ui_helper.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ui\__init__.py">
