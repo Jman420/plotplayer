@@ -1,5 +1,5 @@
-from matplotlib.widgets import Slider
 from tkinter.constants import BOTTOM, X
+from matplotlib.widgets import Slider
 
 IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
 SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
@@ -10,68 +10,69 @@ DEFAULT_FRAME_RATE = 30
 class RenderHandler(object):
     """Render Handler for PlotPlayer Viewer"""
 
-    _playerFigure = None
-    _animationAxes = _renderFunc = None
-    _sliderAxes = _slider = None
-    _sliderVisible = _toolbarVisible = False
+    player_figure = None
+    animation_axes = render_func = None
+    slider_axes = slider = None
+    slider_visible = toolbar_visible = False
 
-    def __init__(self, playerFigure, animationAxes=None, sliderAxes=None, sliderBackgroundColor=SLIDER_BACKGROUND_COLOR,
-                sliderVisible=True, toolbarVisible=False):
-        self._playing = False
-        self._playerFigure = playerFigure
+    def __init__(self, player_figure, animation_axes=None, slider_axes=None,
+                 slider_background_color=SLIDER_BACKGROUND_COLOR, slider_visible=True,
+                 toolbar_visible=False):
+        self.player_figure = player_figure
 
-        if animationAxes == None:
-            animationAxes = self._playerFigure.add_axes(IMAGE_AXES_RECT)
-            animationAxes.set_axis_off()
-        self._animationAxes = animationAxes
+        if animation_axes is None:
+            animation_axes = self.player_figure.add_axes(IMAGE_AXES_RECT)
+            animation_axes.set_axis_off()
+        self.animation_axes = animation_axes
 
-        if sliderAxes == None:
-            sliderAxes = self._playerFigure.add_axes(SLIDER_AXES_RECT, facecolor=sliderBackgroundColor)
-        self._sliderAxes = sliderAxes
+        if slider_axes is None:
+            slider_axes = self.player_figure.add_axes(SLIDER_AXES_RECT,
+                                                      facecolor=slider_background_color)
+        self.slider_axes = slider_axes
 
-        self.setSliderVisible(sliderVisible)
-        self.setToolbarVisible(toolbarVisible)
+        self.set_slider_visible(slider_visible)
+        self.set_toolbar_visible(toolbar_visible)
 
-    def initializeRendering(self, totalFrames, renderFunc):
-        self._slider = Slider(self._sliderAxes, str(), 0, totalFrames - 1, valinit=0.0)
-        self._slider.on_changed(self.handleSliderChanged)
+    def initialize_rendering(self, total_frames, render_func):
+        self.slider = Slider(self.slider_axes, str(), 0, total_frames - 1, valinit=0.0)
+        self.slider.on_changed(self.handle_slider_changed)
 
-        self._renderFunc = renderFunc
+        self.render_func = render_func
 
-    def render(self, frameNumber):
-        frameNumber = min(max(0, int(frameNumber)), self._slider.valmax)
+    def render(self, frame_num):
+        frame_num = min(max(0, int(frame_num)), self.slider.valmax)
 
-        self.renderSlider(frameNumber)
-        self.renderImage(frameNumber)
+        self.render_slider(frame_num)
+        self.render_frame(frame_num)
 
-    def renderImage(self, frameNumber):
-        self._playerFigure.sca(self._animationAxes)
-        self._renderFunc(frameNumber, self._animationAxes)
-        self._playerFigure.canvas.draw_idle()
+    def render_frame(self, frame_num):
+        self.player_figure.sca(self.animation_axes)
+        self.render_func(frame_num, self.animation_axes)
+        self.player_figure.canvas.draw_idle()
 
-    def renderSlider(self, newSliderVal):
-        currentFrameNumber = int(self._slider.val)
-        if currentFrameNumber != newSliderVal:
-            self._slider.set_val(newSliderVal)
+    def render_slider(self, new_slider_val):
+        current_frame_num = int(self.slider.val)
+        if current_frame_num != new_slider_val:
+            self.slider.set_val(new_slider_val)
 
-    def handleSliderChanged(self, sliderValue):
-        self.render(sliderValue)
+    def handle_slider_changed(self, slider_val):
+        self.render(slider_val)
 
-    def setSliderVisible(self, visible):
-        self._sliderAxes.set_visible(visible)
-        self._playerFigure.canvas.draw()
-        self._sliderVisible = visible
+    def set_slider_visible(self, visible):
+        self.slider_axes.set_visible(visible)
+        self.player_figure.canvas.draw()
+        self.slider_visible = visible
 
-    def toggleSlider(self):
-        self.setSliderVisible(not self._sliderVisible)
+    def toggle_slider(self):
+        self.set_slider_visible(not self.slider_visible)
 
-    def setToolbarVisible(self, visible):
+    def set_toolbar_visible(self, visible):
         if visible:
-            self._playerFigure.canvas.toolbar.pack(side=BOTTOM, fill=X)
+            self.player_figure.canvas.toolbar.pack(side=BOTTOM, fill=X)
         else:
-            self._playerFigure.canvas.toolbar.pack_forget()
+            self.player_figure.canvas.toolbar.pack_forget()
 
-        self._toolbarVisible = visible
+        self.toolbar_visible = visible
 
-    def toggleToolbar(self):
-        self.setToolbarVisible(not self._toolbarVisible)
+    def toggle_toolbar(self):
+        self.set_toolbar_visible(not self.toolbar_visible)

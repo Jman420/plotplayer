@@ -2,16 +2,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>a5260524-e6b8-4e4b-ad1c-a2c6392622ae</ProjectGuid>
+    <ProjectGuid>d7796de2-7317-46a5-9691-4f84eb775c2d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <StartupFile>plotplayer_test.py</StartupFile>
+    <SearchPath>..\..\src</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>plotplayer</Name>
-    <RootNamespace>plotplayer</RootNamespace>
+    <Name>plotplayer_test</Name>
+    <RootNamespace>plotplayer_test</RootNamespace>
     <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -23,41 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="helpers\file_helper.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="helpers\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="plotplayer.py" />
-    <Compile Include="validators\type_validation.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ui\render_handler.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ui\input_handler.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="helpers\ui_helper.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ui\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="validators\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="__init__.py" />
+    <Compile Include="plotplayer_test.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="C:\J Stash\Projects\plotplayer\src\plotplayer\helpers\" />
-    <Folder Include="helpers\" />
-    <Folder Include="ui\" />
-    <Folder Include="validators\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Interpreter Include="env\">
+    <Interpreter Include="..\plotplayer\env\">
       <Id>env</Id>
       <Version>3.6</Version>
       <Description>env (Python 3.6 (64-bit))</Description>

@@ -1,8 +1,10 @@
+"""PlotPlayer specific input handler"""
+
 SKIP_BACK_BUTTON = 'left'
 SKIP_AHEAD_BUTTON = 'right'
 JUMP_BACK_BUTTON = 'down'
 JUMP_AHEAD_BUTTON = 'up'
-TOGGLE_PLAY_BUTTON = [ ' ', 'enter' ]
+TOGGLE_PLAY_BUTTON = [' ', 'enter']
 GOTO_BEGINNING_BUTTON = 'home'
 GOTO_END_BUTTON = 'end'
 TOGGLE_SLIDER_BUTTON = 't'
@@ -12,92 +14,97 @@ SAVE_VIDEO_BUTTON = 'v'
 SAVE_HTML_BUTTON = 'h'
 SAVE_JAVASCRIPT_BUTTON = 'j'
 
-KEYS_TRIGGER_STOP = [ SKIP_BACK_BUTTON, SKIP_AHEAD_BUTTON, JUMP_BACK_BUTTON, JUMP_AHEAD_BUTTON,
-                     GOTO_BEGINNING_BUTTON, GOTO_END_BUTTON ]
+KEYS_TRIGGER_STOP = [SKIP_BACK_BUTTON, SKIP_AHEAD_BUTTON, JUMP_BACK_BUTTON, JUMP_AHEAD_BUTTON,
+                     GOTO_BEGINNING_BUTTON, GOTO_END_BUTTON]
 
 SKIP_SIZE = 1
 JUMP_SIZE = 10
 
+def handle_save_key_combo(plotplayer, key):
+    if key == SAVE_VIDEO_BUTTON:
+        plotplayer.save_video()
+    elif key == SAVE_HTML_BUTTON:
+        plotplayer.save_html()
+    elif key == SAVE_JAVASCRIPT_BUTTON:
+        plotplayer.save_javascript()
+
+
 class InputHandler(object):
     """User Input Handler for PlotPlayer Windows"""
 
-    _plotPlayer = None
-    _handlerEnabled = False
-    _keyPressHandler = None
-    _saveButtonPressed = False
-    _skipSize = _jumpSize = None
+    plotplayer = None
+    handler_enabled = False
+    key_press_handler = None
+    save_button_pressed = False
+    skip_size = jump_size = None
 
-    def __init__(self, plotPlayer, keyPressHandler=None, skipSize=SKIP_SIZE, jumpSize=JUMP_SIZE, enabled=False):
-        self._plotPlayer = plotPlayer
-        self._skipSize = skipSize
-        self._jumpSize = jumpSize
-        self._saveButtonPressed = False
-        self.setEnabled(enabled)
+    def __init__(self, plotplayer, key_press_handler=None, skip_size=SKIP_SIZE,
+                 jump_size=JUMP_SIZE, enabled=False):
+        self.plotplayer = plotplayer
+        self.key_press_handler = key_press_handler
+        self.skip_size = skip_size
+        self.jump_size = jump_size
+        self.save_button_pressed = False
+        self.set_enabled(enabled)
 
-        figure = self._plotPlayer.getFigure()
-        figure.canvas.mpl_connect('button_press_event', self.handleMouseButtonDown)
-        figure.canvas.mpl_connect('key_press_event', self.handleKeyPress)
-        figure.canvas.mpl_connect('key_release_event', self.handleKeyRelease)
+        figure = self.plotplayer.get_figure()
+        figure.canvas.mpl_connect('button_press_event', self.handle_mouse_button_down)
+        figure.canvas.mpl_connect('key_press_event', self.handle_key_press)
+        figure.canvas.mpl_connect('key_release_event', self.handle_key_release)
 
-    def handleKeyPress(self, eventData):
-        if not self._handlerEnabled:
+    def handle_key_press(self, event_data):
+        if not self.handler_enabled or ():
             return
 
-        if not self._keyPressHandler == None and self._keyPressHandler(eventData):
+        if self.key_press_handler is not None and self.key_press_handler(event_data):
             return
-        
-        plotPlayer = self._plotPlayer
-        key = eventData.key
-        if self._saveButtonPressed:
-            animationName = plotPlayer._animationName
-            if key == SAVE_VIDEO_BUTTON:
-                plotPlayer.saveVideo()
-            elif key == SAVE_HTML_BUTTON:
-                plotPlayer.saveHtml()
-            elif key == SAVE_JAVASCRIPT_BUTTON:
-                plotPlayer.saveJavascript()
+
+        plotplayer = self.plotplayer
+        key = event_data.key
+        if self.save_button_pressed:
+            handle_save_key_combo(plotplayer, key)
 
         if key in KEYS_TRIGGER_STOP:
-            plotPlayer.stop()
+            plotplayer.stop()
 
-        currentFrame = plotPlayer.getCurrentFrameNumber()
+        current_frame = plotplayer.get_current_frame_number()
         if key == SKIP_BACK_BUTTON:
-            plotPlayer.render(currentFrame - self._skipSize)
+            plotplayer.render(current_frame - self.skip_size)
         elif key == SKIP_AHEAD_BUTTON:
-            plotPlayer.render(currentFrame + self._skipSize)
+            plotplayer.render(current_frame + self.skip_size)
         elif key == JUMP_BACK_BUTTON:
-            plotPlayer.render(currentFrame - self._jumpSize)
+            plotplayer.render(current_frame - self.jump_size)
         elif key == JUMP_AHEAD_BUTTON:
-            plotPlayer.render(currentFrame + self._jumpSize)
+            plotplayer.render(current_frame + self.jump_size)
         elif key == GOTO_BEGINNING_BUTTON:
-            plotPlayer.render(0)
+            plotplayer.render(0)
         elif key == GOTO_END_BUTTON:
-            plotPlayer.render(plotPlayer.getTotalFrames())
+            plotplayer.render(plotplayer.get_total_frames())
         elif key == TOGGLE_SLIDER_BUTTON:
-            plotPlayer.toggleSlider()
+            plotplayer.toggle_slider()
         elif key in TOGGLE_PLAY_BUTTON:
-            plotPlayer.togglePlayback()
+            plotplayer.toggle_playback()
         elif key == TOGGLE_TOOLBAR_BUTTON:
-            plotPlayer.toggleToolbar()
+            plotplayer.toggle_toolbar()
         elif key == SAVE_BUTTON:
-            self._saveButtonPressed = True
+            self.save_button_pressed = True
 
-    def handleKeyRelease(self, eventData):
-        if not self._handlerEnabled:
+    def handle_key_release(self, event_data):
+        if not self.handler_enabled:
             return
 
-        key = eventData.key
+        key = event_data.key
 
         if key == SAVE_BUTTON:
-            self._saveButtonPressed = False
+            self.save_button_pressed = False
 
-    def handleMouseButtonDown(self, eventData):
-        if not self._handlerEnabled:
+    def handle_mouse_button_down(self, event_data):
+        if not self.handler_enabled:
             return
 
-        plotPlayer = self._plotPlayer
-        if eventData.inaxes == plotPlayer._renderHandler._sliderAxes:
-            plotPlayer.stop()
+        plotplayer = self.plotplayer
+        if event_data.inaxes == plotplayer.render_processor.slider_axes:
+            plotplayer.stop()
 
-    def setEnabled(self, enabled):
-        self._handlerEnabled = enabled
+    def set_enabled(self, enabled):
+        self.handler_enabled = enabled

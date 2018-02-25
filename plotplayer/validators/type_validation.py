@@ -1,10 +1,18 @@
+"""Simple type validation methods"""
+
 from matplotlib.figure import Figure
 
-def assertIsFigure(value, variableName):
-    assert isinstance(value, Figure), variableName + ' must be an instance of ' + str(Figure)
+INSTANCE_MESSAGE = "{} must be an instance of {}"
+CALLABLE_MESSAGE = "{} must be a callable object"
 
-def assertIsInt(value, variableName):
-    assert isinstance(value, int), variableName + ' must be an instance of ' + str(int) 
+def assert_is_figure(value, variable_name):
+    """Asserts that a value is a Matplotlib Figure"""
+    assert isinstance(value, Figure), INSTANCE_MESSAGE.format(variable_name, str(Figure))
 
-def assertIsFunction(value, variableName):
-    assert callable(value), name + ' must be a callable function'
+def assert_is_int(value, variable_name):
+    """Asserts that a value is an integer"""
+    assert isinstance(value, int), INSTANCE_MESSAGE.format(variable_name, str(int))
+
+def assert_is_callable(value, variable_name):
+    """Asserts that a value is a callable function"""
+    assert callable(value), CALLABLE_MESSAGE.format(variable_name)

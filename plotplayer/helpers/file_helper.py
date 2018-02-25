@@ -1,9 +1,9 @@
+"""Simple helper functions for File Operations"""
+
 WRITE_FILE_MODE = 'w'
 
-def saveVideo(animation, fileName, writer=None):
-    animation.save(fileName, writer)
-
-def saveFile(fileName, data):
-    file = open(fileName, WRITE_FILE_MODE)
+def save_file(file_name, data):
+    """Function to save data to a file, overwriting the file if it exists"""
+    file = open(file_name, WRITE_FILE_MODE)
     file.write(data)
     file.close()

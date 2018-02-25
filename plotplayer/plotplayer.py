@@ -1,14 +1,12 @@
-from matplotlib.pylab import plt
-
+from matplotlib import pyplot
 from matplotlib.animation import FuncAnimation
 
-from plotplayer.validators import type_validation
-from plotplayer.helpers import file_helper
-from plotplayer.helpers import ui_helper
-from plotplayer.ui import render_handler
-from plotplayer.ui import input_handler
+from .validators import type_validation
+from .helpers import file_helper, ui_helper
+from .ui import render_handler, input_handler
 
-DEFAULT_WINDOW_SIZE = (8, 4.5)  # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
+# Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
+DEFAULT_WINDOW_SIZE = (8, 4.5)
 DEFAULT_ANIMATION_NAME = 'PlotPlayer'
 
 VIDEO_EXTENSION = '.mp4'
@@ -17,138 +15,151 @@ JAVASCRIPT_EXTENSION = '.js.html'
 
 SAVE_DIALOG_TITLE = 'Select video file to save'
 
-VIDEO_FILE_TYPE = [ 'MP4 Video', '*{}'.format(VIDEO_EXTENSION) ]
-HTML_FILE_TYPE = [ 'HTML File', '*{}'.format(HTML_EXTENSION) ]
-JAVASCRIPT_FILE_TYPE = [ 'Javascript HTML File', '*{}'.format(JAVASCRIPT_EXTENSION) ]
+VIDEO_FILE_TYPE = ['MP4 Video', '*{}'.format(VIDEO_EXTENSION)]
+HTML_FILE_TYPE = ['HTML File', '*{}'.format(HTML_EXTENSION)]
+JAVASCRIPT_FILE_TYPE = ['Javascript HTML File', '*{}'.format(JAVASCRIPT_EXTENSION)]
 
 class PlotPlayer(object):
-    '''Function based animation player for Matplotlib'''
-    _figure = None
-    _renderHandler = _inputHandler = None
-    _animationName = _animation = None
-    _frameRate = None
-    _playing = False
+    """Function based animation player for Matplotlib"""
+    figure = None
+    render_processor = input_processor = None
+    animation_name = animation = None
+    frame_rate = None
+    playing = False
 
-    def __init__(self, windowTitle=None, figure=None, windowSize=DEFAULT_WINDOW_SIZE, sliderBackgroundColor=render_handler.SLIDER_BACKGROUND_COLOR,
-                toolbarVisible=False, sliderVisible=True, keyPressHandler=None, skipSize=input_handler.SKIP_SIZE, jumpSize=input_handler.JUMP_SIZE):
-        if figure == None:
-            figure = plt.figure(figsize=windowSize)
-        type_Validation.assertIsFigure(figure, 'figure')
-        self._figure = figure
+    def __init__(self, window_title=None, figure=None, window_size=DEFAULT_WINDOW_SIZE,
+                 slider_background_color=render_handler.SLIDER_BACKGROUND_COLOR,
+                 toolbar_visible=False, slider_visible=True, key_press_handler=None,
+                 skip_size=input_handler.SKIP_SIZE, jump_size=input_handler.JUMP_SIZE):
+        if figure is None:
+            figure = pyplot.figure(figsize=window_size)
+        type_validation.assert_is_figure(figure, 'figure')
+        self.figure = figure
 
-        if windowTitle == None:
-            windowTitle = DEFAULT_ANIMATION_NAME
-        figure.canvas.set_window_title(windowTitle)
+        if window_title is None:
+            window_title = DEFAULT_ANIMATION_NAME
+        figure.canvas.set_window_title(window_title)
 
-        animationAxes = None
-        sliderAxes = None
-        if len(figure.axes) > 0:
-            animationAxes = figure.axes[0]
+        animation_axes = None
+        slider_axes = None
+        if figure.axes:
+            animation_axes = figure.axes[0]
         if len(figure.axes) > 1:
-            sliderAxes = figure.axes[1]
-        self._renderHandler = render_handler.RenderHandler(figure, animationAxes, sliderAxes, sliderBackgroundColor, sliderVisible, toolbarVisible)
+            slider_axes = figure.axes[1]
+        self.render_processor = render_handler.RenderHandler(figure, animation_axes, slider_axes,
+                                                             slider_background_color,
+                                                             slider_visible, toolbar_visible)
 
-        self._inputHandler = input_handler.InputHandler(self, keyPressHandler, skipSize, jumpSize)
+        self.input_processor = input_handler.InputHandler(self, key_press_handler, skip_size,
+                                                          jump_size)
 
-    def initializeAnimation(self, totalFrames, drawFunc, animationName=DEFAULT_ANIMATION_NAME, frameRate=30):
-        type_Validation.assertIsInt(totalFrames, 'totalFrames')
-        type_Validation.assertIsFunction(drawFunc, 'drawFunc')
-        type_Validation.assertIsInt(frameRate, 'frameRate')
+    def initialize_animation(self, total_frames, draw_func, animation_name=DEFAULT_ANIMATION_NAME,
+                             frame_rate=30):
+        type_validation.assert_is_int(total_frames, 'total_frames')
+        type_validation.assert_is_callable(draw_func, 'draw_func')
+        type_validation.assert_is_int(frame_rate, 'frame_rate')
 
         self.stop()
-        self._renderHandler.initializeRendering(totalFrames, drawFunc)
-        self._inputHandler.setEnabled(True)
+        self.render_processor.initialize_rendering(total_frames, draw_func)
+        self.input_processor.set_enabled(True)
 
-        self._animationName = animationName
-        self._frameRate = frameRate
-        self._playing = False
+        self.animation_name = animation_name
+        self.frame_rate = frame_rate
+        self.playing = False
 
-    def render(self, frameNumber):
-        self._renderHandler.render(frameNumber)
+    def render(self, frame_number):
+        self.render_processor.render(frame_number)
 
-        if frameNumber == self.getTotalFrames():
+        if frame_number == self.get_total_frames():
             self.stop()
 
     def play(self):
-        if self._playing:
+        if self.playing:
             return
 
-        slider = self._renderHandler._slider
+        slider = self.render_processor.slider
         if slider.val == slider.valmax:
             self.render(0)
 
-        framesToPlay = range(int(slider.val), slider.valmax + 1)
-        animation = FuncAnimation(self._figure, self.render, framesToPlay, interval=1000 // self._frameRate, repeat=False)
-        self._figure.canvas.draw()
+        frames_to_play = range(int(slider.val), slider.valmax + 1)
+        animation = FuncAnimation(self.figure, self.render, frames_to_play,
+                                  interval=1000 // self.frame_rate, repeat=False)
+        self.figure.canvas.draw()
 
-        self._playing = True
-        self._animation = animation
+        self.playing = True
+        self.animation = animation
 
     def stop(self):
-        if not self._playing:
+        if not self.playing:
             return
 
-        self._animation.event_source.stop()
-        self._playing = False
+        self.animation.event_source.stop()
+        self.playing = False
 
-    def togglePlayback(self):
-        if self._playing:
+    def toggle_playback(self):
+        if self.playing:
             self.stop()
         else:
             self.play()
 
-    def getFigure(self):
-        return self._figure
+    def get_figure(self):
+        return self.figure
 
-    def getAnimationAxes(self):
-        return self._renderHandler._animationAxes
+    def get_animation_axes(self):
+        return self.render_processor.animation_axes
 
-    def getCurrentFrameNumber(self):
-        return int(self._renderHandler._slider.val)
+    def get_current_frame_number(self):
+        return int(self.render_processor.slider.val)
 
-    def getTotalFrames(self):
-        return int(self._renderHandler._slider.valmax)
+    def get_total_frames(self):
+        return int(self.render_processor.slider.valmax)
 
-    def toggleToolbar(self):
-        self._renderHandler.toggleToolbar()
+    def toggle_toolbar(self):
+        self.render_processor.toggle_toolbar()
 
-    def toggleSlider(self):
-        self._renderHandler.toggleSlider()
+    def toggle_slider(self):
+        self.render_processor.toggle_slider()
 
-    def getHtml(self):
-        html = self._animation.to_html5_video()
+    def get_html(self):
+        html = self.animation.to_html5_video()
         return html
 
-    def getJavascript(self):
-        javascript = self._animation.to_jshtml()
+    def get_javascript(self):
+        javascript = self.animation.to_jshtml()
         return javascript
 
-    def saveVideo(self, fileName=None, writer=None):
+    def save_video(self, file_name=None, writer=None):
         self.stop()
 
-        if fileName == None:
-            fileName = ui_helper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + VIDEO_EXTENSION,
-                                                    [ VIDEO_FILE_TYPE, ui_helper.ALL_FILES_TYPE ], VIDEO_EXTENSION)
-        self._animation.save(fileName, writer)
+        if file_name is None:
+            file_types = [VIDEO_FILE_TYPE, ui_helper.ALL_FILES_TYPE]
+            file_name = ui_helper.get_save_dialog_result(SAVE_DIALOG_TITLE,
+                                                         self.animation_name + VIDEO_EXTENSION,
+                                                         file_types, VIDEO_EXTENSION)
+        self.animation.save(file_name, writer)
 
-    def saveHtml(self, fileName=None):
+    def save_html(self, file_name=None):
         self.stop()
 
-        if fileName == None:
-            fileName = ui_helper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + HTML_EXTENSION,
-                                                   [ HTML_FILE_TYPE, ui_helper.ALL_FILES_TYPE ], HTML_EXTENSION)
-        videoHtml = self.getHtml()
-        file_helper.saveFile(fileName, videoHtml)
+        if file_name is None:
+            file_types = [HTML_FILE_TYPE, ui_helper.ALL_FILES_TYPE]
+            file_name = ui_helper.get_save_dialog_result(SAVE_DIALOG_TITLE,
+                                                         self.animation_name + HTML_EXTENSION,
+                                                         file_types, HTML_EXTENSION)
+        video_html = self.get_html()
+        file_helper.save_file(file_name, video_html)
 
-    def saveJavascript(self, fileName=None):
+    def save_javascript(self, file_name=None):
         self.stop()
 
-        if fileName == None:
-            fileName = ui_helper.getSaveDialogResult(SAVE_DIALOG_TITLE, self._animationName + JAVASCRIPT_EXTENSION,
-                                                   [ JAVASCRIPT_FILE_TYPE, ui_helper.ALL_FILES_TYPE ], JAVASCRIPT_EXTENSION)
-        videoJavascript = self.getJavascript()
-        file_helper.saveFile(fileName, videoJavascript)
+        if file_name is None:
+            file_types = [JAVASCRIPT_FILE_TYPE, ui_helper.ALL_FILES_TYPE]
+            file_name = ui_helper.get_save_dialog_result(SAVE_DIALOG_TITLE,
+                                                         self.animation_name + JAVASCRIPT_EXTENSION,
+                                                         file_types, JAVASCRIPT_EXTENSION)
+        video_javascript = self.get_javascript()
+        file_helper.save_file(file_name, video_javascript)
 
     @staticmethod
-    def showPlayers(blocking=True):
-        ui_helper.showPlayers(blocking)
+    def show_players(blocking=True):
+        ui_helper.show_players(blocking)

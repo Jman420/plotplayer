@@ -1,10 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3874CFC8-DCD8-4CD2-A8E1-72D5053C904B}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		LICENSE = LICENSE
 		README.md = README.md
 		requirements.txt = requirements.txt
@@ -12,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "plotplayer", "plotplayer\plotplayer.pyproj", "{A5260524-E6B8-4E4B-AD1C-A2C6392622AE}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "plotplayer_test", "plotplayer_test\plotplayer_test.pyproj", "{D7796DE2-7317-46A5-9691-4F84EB775C2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +24,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A5260524-E6B8-4E4B-AD1C-A2C6392622AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5260524-E6B8-4E4B-AD1C-A2C6392622AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7796DE2-7317-46A5-9691-4F84EB775C2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7796DE2-7317-46A5-9691-4F84EB775C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
