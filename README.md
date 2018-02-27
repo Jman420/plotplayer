@@ -1,6 +1,10 @@
 # plotplayer
 Function based animation player for Matplotlib
 
+# Dependencies
+  * Python v3.6.3
+  * Matplotlib v2.1.2
+
 # Description
 This is a complete re-write of bilylee's videofig project (https://github.com/bilylee/videofig) with
 a focus on Object Oriented Principles, as well as some additional features for convenience.
