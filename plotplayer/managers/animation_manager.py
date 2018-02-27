@@ -1,3 +1,11 @@
+"""
+PlotPlayer specific Animation Manager Methods and Classes
+
+Public Classes:
+  * AnimationManager - Manages Matplotlib FuncAnimation and RenderManager integration to
+      produce animation
+"""
+
 from matplotlib.animation import FuncAnimation
 
 from ..helpers import ui_helper, file_helper
@@ -17,48 +25,97 @@ JAVASCRIPT_FILE_TYPE = ['Javascript HTML File', '*{}'.format(JAVASCRIPT_EXTENSIO
 
 #pylint: disable=too-many-instance-attributes
 class AnimationManager(object):
-    """description of class"""
+    """
+    Animation Manager for PlotPlayer Windows
+
+    Public Methods:
+      * initialize - Initialize the Animation Manager for playback
+      * render - Render a specific frame of the associated animation
+      * play - Begin playback from the current position; restarts from beginning if current
+          position is the last frame
+      * stop - Stop playback at its current position
+      * toggle_playback - Toggle between play and stop states
+      * get_frame_number - Returns the current frame number
+      * get_total_frames - Returns the total number of frames in the current animation
+      * get_html - Returns the current animation in HTML5 Video
+      * get_javascript - Returns the current animation in Javascript Video
+      * save_video - Saves the current animation to file as Video
+      * save_html - Saves the current animation to file as HTML5 Video
+      * save javascript - Saves the current animation to file as Javascript Video
+    """
 
     _figure = None
-    _render_processor = None
+    _render_handler = None
     _frame_num = None
-    _max_frames = None
+    _min_frame_num = None
+    _max_frame_num = None
     _frame_rate = None
     _animation = None
     _animation_name = None
     _playing = False
 
-    def __init__(self, figure, render_processor):
-        self._figure = figure
-        self._render_processor = render_processor
+    def __init__(self, figure, render_handler):
+        """
+        Constructor
 
-    def initialize(self, max_frames, frame_rate=DEFAULT_FRAME_RATE,
+        Parameters:
+          * figure - Instance of Pyplot figure associated with the draw canvas
+          * render_handler - Instance of RenderManager associated with the current animation
+        """
+        self._figure = figure
+        self._render_handler = render_handler
+
+    def initialize(self, max_frame_num, min_frame_num=0, frame_rate=DEFAULT_FRAME_RATE,
                    animation_name=DEFAULT_ANIMATION_NAME):
+        """
+        Initialize the Animation Manager for Playback
+
+        Parameters:
+          * max_frame_num - Last frame number in the animation
+          * min_frame_num (optional) - First frame number in the animation
+          * frame_rate (optional) - Frame rate for playback
+          * animation_name (optional) - Name of the animation
+        """
+        self.stop()
+
         self._frame_rate = frame_rate
-        self._max_frames = max_frames
+        self._min_frame_num = min_frame_num
+        self._max_frame_num = max_frame_num
         self._animation_name = animation_name
 
-        self._frame_num = 0
+        self._frame_num = -1
         self._playing = False
 
     def render(self, frame_num):
-        if frame_num >= self._max_frames:
-            frame_num = self._max_frames - 1
+        """
+        Render a specific frame of the animation
 
-        self._frame_num = frame_num
-        self._render_processor.render(frame_num)
+        Parameters:
+          * frame_num - The frame number to render
+        """
+        if frame_num < self._min_frame_num:
+            frame_num = self._min_frame_num
+        elif frame_num > self._max_frame_num:
+            frame_num = self._max_frame_num
 
-        if self._frame_num >= self._max_frames:
+        total_frames = self._max_frame_num - self._min_frame_num
+        self._frame_num = int(frame_num)
+        self._render_handler.render(frame_num, total_frames)
+
+        if self._frame_num == self._max_frame_num:
             self._playing = False
 
     def play(self):
+        """
+        Begin playback from the current frame; restart playback from beginning if at the end
+        """
         if self._playing:
             return
 
-        if self._frame_num == self._max_frames:
-            self._frame_num = 0
+        if self._frame_num == self._max_frame_num:
+            self._frame_num = -1
 
-        frames_to_play = range(self._frame_num, self._max_frames + 1)
+        frames_to_play = range(self._frame_num, self._max_frame_num + 1)
         animation = FuncAnimation(self._figure, self.render, frames_to_play,
                                   interval=1000 // self._frame_rate, repeat=False)
         self._figure.canvas.draw()
@@ -67,6 +124,9 @@ class AnimationManager(object):
         self._animation = animation
 
     def stop(self):
+        """
+        Stop playback at the current position
+        """
         if not self._playing:
             return
 
@@ -74,26 +134,55 @@ class AnimationManager(object):
         self._playing = False
 
     def toggle_playback(self):
+        """
+        Toggle between play and stop states
+        """
         if self._playing:
             self.stop()
         else:
             self.play()
 
     def get_frame_number(self):
+        """
+        Returns the current frame number
+        """
         return self._frame_num
 
-    def get_total_frames(self):
-        return self._max_frames
+    def get_min_frame_num(self):
+        """
+        Returns the minimum frame number in the current animation
+        """
+        return self._min_frame_num
+
+    def get_max_frame_number(self):
+        """
+        Returns the maximum frame number in the current animation
+        """
+        return self._max_frame_num
 
     def get_html(self):
+        """
+        Returns the current animation in HTML5 Video format
+        """
         html = self._animation.to_html5_video()
         return html
 
     def get_javascript(self):
+        """
+        Returns the current animation in Javascript Video format
+        """
         javascript = self._animation.to_jshtml()
         return javascript
 
     def save_video(self, file_name=None, writer=None):
+        """
+        Saves the current animation to file as Video
+
+        Parameters:
+          * file_name (optional) - Indicates the file name to write the video to; will prompt
+              if omitted
+          * writer (optional) - Specifies the video writer for Matplotlib to use to write the video
+        """
         self.stop()
 
         if file_name is None:
@@ -104,6 +193,13 @@ class AnimationManager(object):
         self._animation.save(file_name, writer)
 
     def save_html(self, file_name=None):
+        """
+        Saves the current animation to file as HTML5 Video
+
+        Parameters:
+          * file_name (optional) - Indicates the file name to write the video to; will prompt
+              if omitted
+        """
         self.stop()
 
         if file_name is None:
@@ -115,6 +211,13 @@ class AnimationManager(object):
         file_helper.save_file(file_name, video_html)
 
     def save_javascript(self, file_name=None):
+        """
+        Saves the current animation to file as Javascript Video
+
+        Parameters:
+          * file_name (optional) - Indicates the file name to write the video to; will prompt
+              if omitted
+        """
         self.stop()
 
         if file_name is None:

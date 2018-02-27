@@ -82,9 +82,9 @@ def _handle_navigation_keys(key, animation_handler, skip_size, jump_size):
     elif key == JUMP_AHEAD_BUTTON:
         animation_handler.render(current_frame_num + jump_size)
     elif key == GOTO_BEGINNING_BUTTON:
-        animation_handler.render(0)
+        animation_handler.render(animation_handler.get_min_frame_num())
     elif key == GOTO_END_BUTTON:
-        animation_handler.render(animation_handler.get_total_frames())
+        animation_handler.render(animation_handler.get_max_frame_number())
     elif key in TOGGLE_PLAY_BUTTON:
         animation_handler.toggle_playback()
     else:
@@ -184,6 +184,9 @@ class InputManager(object):
         figure.canvas.mpl_connect('key_press_event', self._handle_key_press)
         figure.canvas.mpl_connect('key_release_event', self._handle_key_release)
 
+        slider = self._render_handler.get_slider()
+        slider.on_changed(self.handle_slider_changed)
+
     def _handle_key_press(self, event_data):
         """
         Handle Matplotlib key_press_event for a WindowManager instance
@@ -248,7 +251,9 @@ class InputManager(object):
         if not self._handler_enabled:
             return
 
-        frame_num = min(max(0, int(slider_val)), self._animation_handler.get_total_frames())
+        min_frame_num = self._animation_handler.get_min_frame_num()
+        total_frame_count = self._animation_handler.get_max_frame_number() - min_frame_num
+        frame_num = slider_val * total_frame_count + min_frame_num
 
         self._animation_handler.render(frame_num)
 

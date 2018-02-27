@@ -1,4 +1,6 @@
-"""Miscellaneous UI helper methods"""
+"""
+Miscellaneous UI helper methods
+"""
 
 from tkinter.filedialog import asksaveasfilename
 from matplotlib import pyplot
@@ -8,7 +10,9 @@ ALL_FILES_TYPE = ['All Files', ALL_FILES_EXTENSION]
 
 def get_save_dialog_result(title, default_file_name, file_types=None,
                            default_extension=ALL_FILES_EXTENSION):
-    """Displays a Save File Dialog and returns the resulting file name"""
+    """
+    Displays a Save File Dialog and returns the resulting file name
+    """
     if file_types is None:
         file_types = [ALL_FILES_TYPE]
 
@@ -18,7 +22,9 @@ def get_save_dialog_result(title, default_file_name, file_types=None,
     return save_file_name
 
 def show_players(blocking=True):
-    """Shows all Pyplot figures.  Wraps the call in a try-catch block to avoid crashes."""
+    """
+    Shows all Pyplot figures.  Wraps the call in a try-catch block to avoid crashes.
+    """
     try:
         pyplot.show(blocking)
     except AttributeError:
