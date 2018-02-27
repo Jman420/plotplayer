@@ -18,7 +18,7 @@ def redraw_fn(frame_num, axes):
 redraw_fn.initialized = False
 
 video1 = PlotPlayer()
-video1.initialize_animation(100, redraw_fn)
+video1.initialize(100, redraw_fn)
 video1.play()
 
 PlotPlayer.show_players()

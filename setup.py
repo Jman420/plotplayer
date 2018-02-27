@@ -2,7 +2,8 @@ from setuptools import setup, find_packages
 
 setup(name='plotplayer',
         version='4.0.1',
-        description='Lightweight function based animation player for Matplotlib',
+        description='Function based animation player for Matplotlib',
+        long_description=open("Readme.md").read(),
         url='https://github.com/Jman420/plotplayer',
         author='Justin Giannone',
         author_email='jman.giannone@gmail.com',

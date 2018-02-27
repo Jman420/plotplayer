@@ -1,5 +1,4 @@
-"""Prevent usage of Matplotlib backends other than Tkinter"""
-
+# Prevent usage of backends other than Tkinter
 import matplotlib
 
 
