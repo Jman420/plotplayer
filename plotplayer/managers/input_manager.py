@@ -1,4 +1,14 @@
-"""PlotPlayer specific input handler"""
+"""
+PlotPlayer specific Input Manager Methods and Classes
+
+Public Classes:
+  * InputManager - Attaches to appropriate input events and handles their events.
+
+Private Methods:
+  * _handle_save_key_combo - Handles Save key combo mappings
+  * _handle_navigation_keys - Handles Navigation key mappings
+  * _handle_visibility_keys - Handles Visibility key mappings
+"""
 
 SKIP_BACK_BUTTON = 'left'
 SKIP_AHEAD_BUTTON = 'right'
@@ -20,7 +30,17 @@ KEYS_TRIGGER_STOP = [SKIP_BACK_BUTTON, SKIP_AHEAD_BUTTON, JUMP_BACK_BUTTON, JUMP
 SKIP_SIZE = 1
 JUMP_SIZE = 10
 
-def handle_save_key_combo(animation_handler, key):
+def _handle_save_key_combo(key, animation_handler):
+    """
+    Handle save key inputs
+
+    Parmeters:
+      * key - A string representation of the pressed key
+      * animation_handler - An instance of AnimationManager class to be called based on the key
+          inputs
+
+    Returns a boolean indicating whether they key press is handled
+    """
     handled = True
 
     if key == SAVE_VIDEO_BUTTON:
@@ -34,7 +54,19 @@ def handle_save_key_combo(animation_handler, key):
 
     return handled
 
-def handle_navigation_keys(key, animation_handler, skip_size, jump_size):
+def _handle_navigation_keys(key, animation_handler, skip_size, jump_size):
+    """
+    Handle navigation key inputs
+
+    Parameters:
+      * key - A string representation of the pressed key
+      * animation_handler - An instance of AnimationManager class to be called based on the key
+          inputs
+      * skip_size - Number of frames to skip ahead when skip keys are pressed
+      * jump_size - Number of frames to jump ahead when jump keys are pressed
+
+    Returns a boolean indicating whether they key press is handled
+    """
     handled = True
 
     if key in KEYS_TRIGGER_STOP:
@@ -60,7 +92,16 @@ def handle_navigation_keys(key, animation_handler, skip_size, jump_size):
 
     return handled
 
-def handle_visibility_keys(key, window_handler, render_handler):
+def _handle_visibility_keys(key, window_handler, render_handler):
+    """
+    Handle visibility toggle key inputs
+
+    Parameters:
+      * window_handler - An instance of WindowManager class to be called based on key inputs
+      * render_handler - An instance of RenderManager class to be called based on key inputs
+
+    Returns a boolean indicating whether they key press is handled
+    """
     handled = True
 
     if key == TOGGLE_SLIDER_BUTTON:
@@ -75,7 +116,28 @@ def handle_visibility_keys(key, window_handler, render_handler):
 
 #pylint: disable=too-many-instance-attributes
 class InputManager(object):
-    """User Input Handler for PlotPlayer Windows"""
+    """
+    User Input Handler for PlotPlayer Windows
+
+    See PlotPlayer Readme for default keymappings
+
+    Public Methods:
+      * handle_slider_changed - Method to handle scrubber slider changed events; needs to be
+          attached to appropriate slider on_changed event
+      * set_enabled - Method to enable/disable an InputManager instance
+
+    Private Methods:
+      * _handle_key_press - Method to handle key presses; attached to Matplotlib key_press_event.
+      * _handle_key_release - Method to handle key releases; attached to Matplotlib
+          key_release_event.
+      * _handle_mouse_button_down - Method to handle mouse button down events; attached to
+          Matplotlib button_press_event.
+
+    Overriding Default Keymappings:
+      * Provide a method as key_press_handler parameter in constructor; this method will be called
+          on the Matplotlib key_press_event
+      * Provided method should return True in order to prevent processing default keymappings
+    """
 
     _window_handler = None
     _render_handler = None
@@ -89,6 +151,24 @@ class InputManager(object):
     #pylint: disable=too-many-arguments
     def __init__(self, window_handler, render_handler, animation_handler, key_press_handler=None,
                  skip_size=SKIP_SIZE, jump_size=JUMP_SIZE, enabled=False):
+        """
+        Constructor
+
+        Parameters:
+          * window_handler - An instance of WindowManager class associated with the InputManager
+              instance
+          * render_handler - An instance of RenderManager class associated with the InputManager
+              instance
+          * animation_handler - An instance of AnimationManager class associated with the
+              InputManager instance
+          * key_press_handler (optional) - A method allowing for custom keymappings and input
+              handling
+          * skip_size (optional) - A number representing the number of frames difference for Skip
+              key mappings
+          * jump_size (optional) - A number representing the number of frames difference for Jump
+              key mappings
+          * enabled (optional) - Boolean indicating whether the InputManager is enabled
+        """
         self._window_handler = window_handler
         self._render_handler = render_handler
         self._animation_handler = animation_handler
@@ -100,11 +180,17 @@ class InputManager(object):
         self.set_enabled(enabled)
 
         figure = self._window_handler.get_figure()
-        figure.canvas.mpl_connect('button_press_event', self.handle_mouse_button_down)
-        figure.canvas.mpl_connect('key_press_event', self.handle_key_press)
-        figure.canvas.mpl_connect('key_release_event', self.handle_key_release)
+        figure.canvas.mpl_connect('button_press_event', self._handle_mouse_button_down)
+        figure.canvas.mpl_connect('key_press_event', self._handle_key_press)
+        figure.canvas.mpl_connect('key_release_event', self._handle_key_release)
 
-    def handle_key_press(self, event_data):
+    def _handle_key_press(self, event_data):
+        """
+        Handle Matplotlib key_press_event for a WindowManager instance
+
+        Parameters:
+          * event_data - An object representing the key press event data
+        """
         if not self._handler_enabled:
             return
 
@@ -112,19 +198,25 @@ class InputManager(object):
             return
 
         key = event_data.key
-        if self._save_button_pressed and handle_save_key_combo(self._animation_handler, key):
+        if self._save_button_pressed and _handle_save_key_combo(key, self._animation_handler):
             return
 
-        if handle_navigation_keys(key, self._animation_handler, self._skip_size, self._jump_size):
+        if _handle_navigation_keys(key, self._animation_handler, self._skip_size, self._jump_size):
             return
 
-        if handle_visibility_keys(key, self._window_handler, self._render_handler):
+        if _handle_visibility_keys(key, self._window_handler, self._render_handler):
             return
 
         if key == SAVE_BUTTON:
             self._save_button_pressed = True
 
-    def handle_key_release(self, event_data):
+    def _handle_key_release(self, event_data):
+        """
+        Handle Matplotlib key_release_event for WindowManager Instance
+
+        Parameters:
+          * event_data - An object representing the key press event data
+        """
         if not self._handler_enabled:
             return
 
@@ -133,7 +225,13 @@ class InputManager(object):
         if key == SAVE_BUTTON:
             self._save_button_pressed = False
 
-    def handle_mouse_button_down(self, event_data):
+    def _handle_mouse_button_down(self, event_data):
+        """
+        Handle Matplotlib button_press_event for WindowManager Instance
+
+        Parameters:
+          * event_data - An object representing the key press event data
+        """
         if not self._handler_enabled:
             return
 
@@ -141,9 +239,24 @@ class InputManager(object):
             self._animation_handler.stop()
 
     def handle_slider_changed(self, slider_val):
+        """
+        Handle Scrubber slider changed event
+
+        Parameters:
+          * slider_val - A number representing the new slider value
+        """
+        if not self._handler_enabled:
+            return
+
         frame_num = min(max(0, int(slider_val)), self._animation_handler.get_total_frames())
 
         self._animation_handler.render(frame_num)
 
     def set_enabled(self, enabled):
+        """
+        Enable/Disable the input functionality for an InputManager instance
+
+        Parameters:
+          * enabled - Boolean indicating whether the InputManager instance is enabled
+        """
         self._handler_enabled = enabled
