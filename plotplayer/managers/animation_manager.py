@@ -100,7 +100,7 @@ class AnimationManager(object):
 
         total_frames = self._max_frame_num - self._min_frame_num
         self._frame_num = int(frame_num)
-        self._render_handler.render(frame_num, total_frames)
+        self._render_handler.render(self._frame_num, total_frames)
 
         if self._frame_num == self._max_frame_num:
             self._playing = False
