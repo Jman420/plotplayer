@@ -23,6 +23,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="data_models\animation_params.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="data_models\render_axes_params.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="data_models\slider_params.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="data_models\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="helpers\file_helper.py">
       <SubType>Code</SubType>
     </Compile>
@@ -58,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="C:\J Stash\Projects\plotplayer\src\plotplayer\helpers\" />
+    <Folder Include="data_models\" />
     <Folder Include="helpers\" />
     <Folder Include="C:\J Stash\Projects\plotplayer\src\plotplayer\managers\" />
     <Folder Include="managers\" />

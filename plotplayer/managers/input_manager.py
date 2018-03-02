@@ -142,11 +142,14 @@ class InputManager(object):
     _window_handler = None
     _render_handler = None
     _animation_handler = None
-    _handler_enabled = False
+    
     _key_press_handler = None
-    _save_button_pressed = False
+    
     _skip_size = None
     _jump_size = None
+
+    _handler_enabled = False
+    _save_button_pressed = False
 
     #pylint: disable=too-many-arguments
     def __init__(self, window_handler, render_handler, animation_handler, key_press_handler=None,

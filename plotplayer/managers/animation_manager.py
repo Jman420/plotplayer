@@ -10,9 +10,6 @@ from matplotlib.animation import FuncAnimation
 
 from ..helpers import ui_helper, file_helper
 
-DEFAULT_ANIMATION_NAME = "PlotPlayer"
-DEFAULT_FRAME_RATE = 30
-
 VIDEO_EXTENSION = '.mp4'
 HTML_EXTENSION = '.html'
 JAVASCRIPT_EXTENSION = '.js.html'
@@ -23,7 +20,6 @@ VIDEO_FILE_TYPE = ['MP4 Video', '*{}'.format(VIDEO_EXTENSION)]
 HTML_FILE_TYPE = ['HTML File', '*{}'.format(HTML_EXTENSION)]
 JAVASCRIPT_FILE_TYPE = ['Javascript HTML File', '*{}'.format(JAVASCRIPT_EXTENSION)]
 
-#pylint: disable=too-many-instance-attributes
 class AnimationManager(object):
     """
     Animation Manager for PlotPlayer Windows
@@ -47,11 +43,8 @@ class AnimationManager(object):
     _figure = None
     _render_handler = None
     _frame_num = None
-    _min_frame_num = None
-    _max_frame_num = None
-    _frame_rate = None
+    _animation_params = None
     _animation = None
-    _animation_name = None
     _playing = False
 
     def __init__(self, figure, render_handler):
@@ -65,23 +58,16 @@ class AnimationManager(object):
         self._figure = figure
         self._render_handler = render_handler
 
-    def initialize(self, max_frame_num, min_frame_num=0, frame_rate=DEFAULT_FRAME_RATE,
-                   animation_name=DEFAULT_ANIMATION_NAME):
+    def initialize(self, animation_params):
         """
         Initialize the Animation Manager for Playback
 
         Parameters:
-          * max_frame_num - Last frame number in the animation
-          * min_frame_num (optional) - First frame number in the animation
-          * frame_rate (optional) - Frame rate for playback
-          * animation_name (optional) - Name of the animation
+          * animation_params - Instance of AnimationParams
         """
         self.stop()
 
-        self._frame_rate = frame_rate
-        self._min_frame_num = min_frame_num
-        self._max_frame_num = max_frame_num
-        self._animation_name = animation_name
+        self._animation_params = animation_params
 
         self._frame_num = -1
         self._playing = False
@@ -93,16 +79,17 @@ class AnimationManager(object):
         Parameters:
           * frame_num - The frame number to render
         """
-        if frame_num < self._min_frame_num:
-            frame_num = self._min_frame_num
-        elif frame_num > self._max_frame_num:
-            frame_num = self._max_frame_num
+        if frame_num < self._animation_params.min_frame_number:
+            frame_num = self._animation_params.min_frame_number
+        elif frame_num > self._animation_params.max_frame_number:
+            frame_num = self._animation_params.max_frame_number
 
-        total_frames = self._max_frame_num - self._min_frame_num
+        total_frames = (self._animation_params.max_frame_number -
+                        self._animation_params.min_frame_number)
         self._frame_num = int(frame_num)
         self._render_handler.render(self._frame_num, total_frames)
 
-        if self._frame_num == self._max_frame_num:
+        if self._frame_num == self._animation_params.max_frame_number:
             self._playing = False
 
     def play(self):
@@ -112,12 +99,12 @@ class AnimationManager(object):
         if self._playing:
             return
 
-        if self._frame_num == self._max_frame_num:
+        if self._frame_num == self._animation_params.max_frame_number:
             self._frame_num = -1
 
-        frames_to_play = range(self._frame_num, self._max_frame_num + 1)
+        frames_to_play = range(self._frame_num, self._animation_params.max_frame_number + 1)
         animation = FuncAnimation(self._figure, self.render, frames_to_play,
-                                  interval=1000 // self._frame_rate, repeat=False)
+                                  interval=1000 // self._animation_params.frame_rate, repeat=False)
         self._figure.canvas.draw()
 
         self._playing = True
@@ -152,13 +139,13 @@ class AnimationManager(object):
         """
         Returns the minimum frame number in the current animation
         """
-        return self._min_frame_num
+        return self._animation_params.min_frame_number
 
     def get_max_frame_number(self):
         """
         Returns the maximum frame number in the current animation
         """
-        return self._max_frame_num
+        return self._animation_params.max_frame_number
 
     def get_html(self):
         """
@@ -187,8 +174,9 @@ class AnimationManager(object):
 
         if file_name is None:
             file_types = [VIDEO_FILE_TYPE, ui_helper.ALL_FILES_TYPE]
+            animation_name = self._animation_params.animation_name
             file_name = ui_helper.get_save_dialog_result(SAVE_DIALOG_TITLE,
-                                                         self._animation_name + VIDEO_EXTENSION,
+                                                         animation_name + VIDEO_EXTENSION,
                                                          file_types, VIDEO_EXTENSION)
         self._animation.save(file_name, writer)
 
@@ -204,8 +192,9 @@ class AnimationManager(object):
 
         if file_name is None:
             file_types = [HTML_FILE_TYPE, ui_helper.ALL_FILES_TYPE]
+            animation_name = self._animation_params.animation_name
             file_name = ui_helper.get_save_dialog_result(SAVE_DIALOG_TITLE,
-                                                         self._animation_name + HTML_EXTENSION,
+                                                         animation_name + HTML_EXTENSION,
                                                          file_types, HTML_EXTENSION)
         video_html = self.get_html()
         file_helper.save_file(file_name, video_html)
@@ -221,7 +210,7 @@ class AnimationManager(object):
         self.stop()
 
         if file_name is None:
-            default_file_name = self._animation_name + JAVASCRIPT_EXTENSION
+            default_file_name = self._animation_params.animation_name + JAVASCRIPT_EXTENSION
             file_types = [JAVASCRIPT_FILE_TYPE, ui_helper.ALL_FILES_TYPE]
             file_name = ui_helper.get_save_dialog_result(SAVE_DIALOG_TITLE, default_file_name,
                                                          file_types, JAVASCRIPT_EXTENSION)

@@ -6,6 +6,7 @@ Public Classes:
 """
 
 from .helpers import ui_helper
+from .data_models.animation_params import AnimationParams
 from .managers import window_manager, render_manager, animation_manager, input_manager
 
 class PlotPlayer(object):
@@ -58,8 +59,7 @@ class PlotPlayer(object):
                                                        self._animation_handler)
         self._input_handler = input_handler
 
-    def initialize(self, total_frames, draw_func,
-                   animation_name=animation_manager.DEFAULT_ANIMATION_NAME):
+    def initialize(self, total_frames, draw_func, animation_name=None):
         """
         Initialize the PlotPlayer instance for animation playback
 
@@ -71,7 +71,9 @@ class PlotPlayer(object):
         self.stop()
 
         self._render_handler.initialize(draw_func)
-        self._animation_handler.initialize(total_frames, animation_name=animation_name)
+
+        animation_params = AnimationParams(total_frames, animation_name=animation_name)
+        self._animation_handler.initialize(animation_params)
         self._input_handler.set_enabled(True)
 
     def play(self):
