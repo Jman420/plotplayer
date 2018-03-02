@@ -3,7 +3,7 @@ Function based animation player for Matplotlib
 
 # Dependencies
   * Python v3.6.3
-  * Matplotlib v2.1.2
+  * Matplotlib (https://matplotlib.org/)
 
 # Description
 This is a complete re-write of bilylee's videofig project (https://github.com/bilylee/videofig) with
