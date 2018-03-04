@@ -88,8 +88,9 @@ class RenderManager(object):
             return
 
         slider_val = frame_num / total_frames
-        self._render_slider(slider_val)
         self._render_frame(frame_num)
+        self._render_slider(slider_val)
+        self._figure.canvas.draw_idle()
 
     def set_slider_visible(self, visible):
         """
@@ -137,7 +138,6 @@ class RenderManager(object):
 
         self._figure.sca(animation_axes)
         self._render_func(frame_num, animation_axes)
-        self._figure.canvas.draw_idle()
 
     def _render_slider(self, new_slider_val):
         """

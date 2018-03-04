@@ -19,6 +19,6 @@ redraw_fn.initialized = False
 
 video1 = PlotPlayer()
 video1.initialize(100, redraw_fn)
-video1.play()
+#video1.play()
 
 PlotPlayer.show_players()

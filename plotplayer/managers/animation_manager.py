@@ -105,10 +105,10 @@ class AnimationManager(object):
         frames_to_play = range(self._frame_num, self._animation_params.max_frame_number + 1)
         animation = FuncAnimation(self._figure, self.render, frames_to_play,
                                   interval=1000 // self._animation_params.frame_rate, repeat=False)
-        self._figure.canvas.draw()
-
+        
         self._playing = True
         self._animation = animation
+        self._figure.canvas.draw()
 
     def stop(self):
         """
