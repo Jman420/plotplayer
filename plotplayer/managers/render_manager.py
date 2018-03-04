@@ -65,32 +65,28 @@ class RenderManager(object):
         self._slider = Slider(render_axes_params.slider_axes, str(), 0, 1, valinit=0.0)
 
         self.set_slider_visible(scrubber_slider_params.slider_visible)
+        self.initialize(None, True)
 
-    def initialize(self, render_func):
+    def initialize(self, render_func, clear_animation=False):
         """
         Initialize the Render Manager for rendering
 
         Parameters:
           * render_func - The function to perform the render
         """
+        if clear_animation:
+            animation_axes = self.get_animation_axes()
+            animation_axes.clear()
+            animation_axes.set_axis_off()
+            self._enforce_limits()
+
         self._render_func = render_func
 
-        animation_axes = self.get_animation_axes()
-        animation_axes.clear()
-        animation_axes.set_axis_off()
-        self.set_limits()
-
     def set_limits(self, animation_x_limits=None, animation_y_limits=None):
+        self._render_axes_params.animation_x_limits = animation_x_limits
+        self._render_axes_params.animation_y_limits = animation_y_limits
         
-        if animation_x_limits is not None:
-            self._render_axes_params.animation_x_limits = animation_x_limits
-
-        if animation_y_limits is not None:
-            self._render_axes_params.animation_y_limits = animation_y_limits
-            
-        animation_axes = self.get_animation_axes()
-        animation_axes.set_xlim(self._render_axes_params.animation_x_limits)
-        animation_axes.set_ylim(self._render_axes_params.animation_y_limits)
+        self._enforce_limits()
 
     def render(self, frame_num, total_frames):
         """
@@ -164,3 +160,14 @@ class RenderManager(object):
         """
         if self._slider.val != new_slider_val:
             self._slider.set_val(new_slider_val)
+
+    def _enforce_limits(self):
+        animation_axes = self.get_animation_axes()
+
+        if (self._render_axes_params.animation_x_limits is None or
+            self._render_axes_params.animation_y_limits is None):
+            animation_axes.autoscale(True)
+        else:
+            animation_axes.autoscale(False)
+            animation_axes.set_xlim(self._render_axes_params.animation_x_limits)
+            animation_axes.set_ylim(self._render_axes_params.animation_y_limits)

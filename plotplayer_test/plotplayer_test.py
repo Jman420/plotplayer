@@ -20,7 +20,6 @@ redraw_fn.initialized = False
 video1 = PlotPlayer()
 video1.initialize(100, redraw_fn)
 video1.get_render_manager().set_limits([-0.05, 1.05], [-0.05, 0.05])
-#video1.get_animation_manager().render(0)
 #video1.play()
 
 PlotPlayer.show_players()

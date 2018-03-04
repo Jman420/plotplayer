@@ -5,9 +5,6 @@ Public Classes :
   * RenderAxesParams - Class containing pointers to animation and slider axes
 """
 
-_DEFAULT_X_LIMITS = [0, 1280]
-_DEFAULT_Y_LIMITS = [0, 720]
-
 class RenderAxesParams(object):
     """
     Pointers to Animation and Slider Axes for Rendering
@@ -24,8 +21,8 @@ class RenderAxesParams(object):
     animation_y_limits = None
     slider_axes = None
 
-    def __init__(self, animation_axes=None, slider_axes=None, animation_x_limits=_DEFAULT_X_LIMITS,
-                 animation_y_limits=_DEFAULT_Y_LIMITS):
+    def __init__(self, animation_axes=None, slider_axes=None, animation_x_limits=None,
+                 animation_y_limits=None):
         """
         Constructor
 
