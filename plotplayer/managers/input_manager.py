@@ -205,7 +205,34 @@ class InputManager(object):
         figure.canvas.mpl_connect('key_release_event', self._handle_key_release)
 
         slider = self._render_handler.get_slider()
-        slider.on_changed(self.handle_slider_changed)
+        slider.on_changed(self._handle_slider_changed)
+
+    def get_skip_size(self):
+        return self._skip_size
+
+    def set_skip_size(self, size):
+        self._skip_size = size
+
+    def get_jump_size(self):
+        return self._jump_size
+
+    def set_jump_size(self, size):
+        self._jump_size = size
+
+    def get_key_press_handler(self):
+        return self._key_press_handler
+
+    def set_key_press_handler(self, handler):
+        self._key_press_handler = handler
+
+    def set_enabled(self, enabled):
+        """
+        Enable/Disable the input functionality for an InputManager instance
+
+        Parameters:
+          * enabled - Boolean indicating whether the InputManager instance is enabled
+        """
+        self._handler_enabled = enabled
 
     def _handle_key_press(self, event_data):
         """
@@ -261,7 +288,7 @@ class InputManager(object):
         if event_data.inaxes == self._render_handler.get_slider_axes():
             self._animation_handler.stop()
 
-    def handle_slider_changed(self, slider_val):
+    def _handle_slider_changed(self, slider_val):
         """
         Handle Scrubber slider changed event
 
@@ -276,12 +303,3 @@ class InputManager(object):
         frame_num = slider_val * total_frame_count + min_frame_num
 
         self._animation_handler.render(frame_num)
-
-    def set_enabled(self, enabled):
-        """
-        Enable/Disable the input functionality for an InputManager instance
-
-        Parameters:
-          * enabled - Boolean indicating whether the InputManager instance is enabled
-        """
-        self._handler_enabled = enabled

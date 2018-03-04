@@ -11,8 +11,8 @@ from matplotlib import pyplot
 from ..validators import type_validation
 
 # Aspect ratio (ie. 4:3, 16:9, 21:9) in relation to DPI; default is half 16:9 (8:4.5)
-DEFAULT_WINDOW_SIZE = (8, 4.5)
-DEFAULT_ANIMATION_NAME = 'PlotPlayer'
+_DEFAULT_WINDOW_SIZE = (8, 4.5)
+_DEFAULT_ANIMATION_NAME = 'PlotPlayer'
 
 class WindowManager(object):
     """
@@ -29,7 +29,7 @@ class WindowManager(object):
     _figure = None
     _toolbar_visible = False
 
-    def __init__(self, window_size=DEFAULT_WINDOW_SIZE, window_title=DEFAULT_ANIMATION_NAME,
+    def __init__(self, window_size=_DEFAULT_WINDOW_SIZE, window_title=_DEFAULT_ANIMATION_NAME,
                  figure=None, toolbar_visible=True):
         """
         Constructor
@@ -47,11 +47,13 @@ class WindowManager(object):
         type_validation.assert_is_figure(figure, 'figure')
         self._figure = figure
 
-        if window_title is None:
-            window_title = DEFAULT_ANIMATION_NAME
-        figure.canvas.set_window_title(window_title)
-
+        self.set_window_title(window_title)
         self.set_toolbar_visible(toolbar_visible)
+
+    def set_window_title(self, window_title):
+        if window_title is None:
+            window_title = _DEFAULT_ANIMATION_NAME
+        self.get_figure().canvas.set_window_title(window_title)
 
     def get_toolbar_visible(self):
         """
