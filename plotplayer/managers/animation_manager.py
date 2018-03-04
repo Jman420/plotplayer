@@ -83,10 +83,10 @@ class AnimationManager(object):
             frame_num = self._animation_params.min_frame_number
         elif frame_num > self._animation_params.max_frame_number:
             frame_num = self._animation_params.max_frame_number
+        self._frame_num = round(frame_num)
 
         total_frames = (self._animation_params.max_frame_number -
                         self._animation_params.min_frame_number)
-        self._frame_num = int(frame_num)
         self._render_handler.render(self._frame_num, total_frames)
 
         if self._frame_num == self._animation_params.max_frame_number:

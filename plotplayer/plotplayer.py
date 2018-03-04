@@ -4,6 +4,7 @@ PlotPlayer - A functional based animation viewer using Matplotlib
 Public Classes:
   * PlotPlayer - Displays an animation in a Matplotlib Figure Window
 """
+import numpy
 
 from .helpers import ui_helper
 from .data_models.animation_params import AnimationParams
@@ -59,6 +60,9 @@ class PlotPlayer(object):
                                                        self._animation_handler)
         self._input_handler = input_handler
 
+        self.initialize(1, self._render_logo)
+        self.play()
+
     def initialize(self, total_frames, draw_func, animation_name=None):
         """
         Initialize the PlotPlayer instance for animation playback
@@ -111,6 +115,13 @@ class PlotPlayer(object):
         Returns the InputManager for the PlotPlayer
         """
         return self._input_handler
+
+    def _render_logo(self, frame_num, axes):
+        amp = float(frame_num) / 3000
+        f0 = 3
+        t = numpy.arange(0.0, 1.0, 0.001)
+        s = amp * numpy.sin(2 * numpy.pi * f0 * t)
+        axes.plot(t, s, lw=2, color='red')
 
     @staticmethod
     def show_players(blocking=True):

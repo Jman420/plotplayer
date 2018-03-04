@@ -53,7 +53,6 @@ class RenderManager(object):
 
         if render_axes_params.animation_axes is None:
             render_axes_params.animation_axes = self._figure.add_axes(IMAGE_AXES_RECT)
-            render_axes_params.animation_axes.set_axis_off()
 
         if render_axes_params.slider_axes is None:
             slider_background_color = scrubber_slider_params.slider_background_color
@@ -75,6 +74,10 @@ class RenderManager(object):
           * render_func - The function to perform the render
         """
         self._render_func = render_func
+
+        animation_axes = self._render_axes_params.animation_axes
+        animation_axes.clear()
+        animation_axes.set_axis_off()
 
     def render(self, frame_num, total_frames):
         """
