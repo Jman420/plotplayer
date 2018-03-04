@@ -26,6 +26,7 @@ class PlotPlayer(object):
       * get_animation_manager - Returns the AnimationManager for the PlotPlayer Instance
       * get_input_manager - Returns the InputManager for the PlotPlayer Instance
     """
+    _resolution_params = None
     _window_handler = None
     _render_handler = None
     _animation_handler = None
@@ -117,11 +118,7 @@ class PlotPlayer(object):
         return self._input_handler
 
     def _render_logo(self, frame_num, axes):
-        amp = float(frame_num) / 3000
-        f0 = 3
-        t = numpy.arange(0.0, 1.0, 0.001)
-        s = amp * numpy.sin(2 * numpy.pi * f0 * t)
-        axes.plot(t, s, lw=2, color='red')
+        pass
 
     @staticmethod
     def show_players(blocking=True):

@@ -78,6 +78,19 @@ class RenderManager(object):
         animation_axes = self._render_axes_params.animation_axes
         animation_axes.clear()
         animation_axes.set_axis_off()
+        self.set_limits()
+
+    def set_limits(self, animation_x_limits=None, animation_y_limits=None):
+        if animation_x_limits is not None:
+            self._render_axes_params.animation_x_limits = animation_x_limits
+
+        if animation_y_limits is not None:
+            self._render_axes_params.animation_y_limits = animation_y_limits
+
+        animation_axes = self._render_axes_params.animation_axes
+        animation_axes.autoscale(False)
+        animation_axes.set_xlim(self._render_axes_params.animation_x_limits)
+        animation_axes.set_ylim(self._render_axes_params.animation_y_limits)
 
     def render(self, frame_num, total_frames):
         """
