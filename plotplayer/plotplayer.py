@@ -77,6 +77,7 @@ class PlotPlayer(object):
         animation_params = AnimationParams(total_frames, animation_name=animation_name)
         self._animation_handler.initialize(animation_params)
         self._input_handler.set_enabled(True)
+        self.get_animation_manager().render(0)
 
     def play(self):
         """
