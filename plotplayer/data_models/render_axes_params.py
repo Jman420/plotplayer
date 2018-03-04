@@ -13,8 +13,10 @@ class RenderAxesParams(object):
     Pointers to Animation and Slider Axes for Rendering
 
     Public Attributes :
-      * animation_axes - Pointer to the Animation Axes
-      * slider_axes - Pointer to the Slider Axes
+      * animation_axes - Instance of Matplotlib Axes to use for Animation
+      * animation_x_limits - An array representing the minimum and maximum animation x-axis limits
+      * animation_y_limits - An array representing the minimum and maximum animation y-axis limits
+      * slider_axes - Instance of Matplotlib Axes to use for the Scrubber Slider
     """
 
     animation_axes = None
@@ -28,8 +30,10 @@ class RenderAxesParams(object):
         Constructor
 
         Parameters :
-          * animation_axes - Pointer to the Animation Axes
-          * slider_axes - Pointer to the Slider Axes
+          * animation_axes - Instance of Matplotlib Axes to use for Animation
+          * animation_x_limits - An array representing the minimum and maximum animation x-axis limits
+          * animation_y_limits - An array representing the minimum and maximum animation y-axis limits
+          * slider_axes - Instance of Matplotlib Axes to use for the Scrubber Slider
         """
         self.animation_axes = animation_axes
         self.animation_x_limits = animation_x_limits
@@ -43,9 +47,15 @@ class RenderAxesParams(object):
         return self.animation_axes
 
     def get_animation_x_limits(self):
+        """
+        Returns the Animation X-Axis Limits
+        """
         return self.get_animation_x_limits
 
     def get_animation_y_limits(self):
+        """
+        Returns the Animation Y-Axis Limits
+        """
         return self.get_animation_y_limits
 
     def get_slider_axes(self):

@@ -61,9 +61,6 @@ class PlotPlayer(object):
                                                        self._animation_handler)
         self._input_handler = input_handler
 
-        self.initialize(1, self._render_logo)
-        self.play()
-
     def initialize(self, total_frames, draw_func, animation_name=None):
         """
         Initialize the PlotPlayer instance for animation playback
@@ -80,6 +77,7 @@ class PlotPlayer(object):
         animation_params = AnimationParams(total_frames, animation_name=animation_name)
         self._animation_handler.initialize(animation_params)
         self._input_handler.set_enabled(True)
+        self._animation_handler.render(0)
 
     def play(self):
         """
@@ -116,9 +114,6 @@ class PlotPlayer(object):
         Returns the InputManager for the PlotPlayer
         """
         return self._input_handler
-
-    def _render_logo(self, frame_num, axes):
-        pass
 
     @staticmethod
     def show_players(blocking=True):

@@ -1,10 +1,18 @@
+from matplotlib.pyplot import rcParams
+
 """
 PlotPlayer specific Input Manager Methods and Classes
 
-Public Classes:
+Notes :
+  * This manager overrides the default Matplotlib Keyboard Shortcuts for the following :
+    - Forward -> Right Directional Button
+    - Back -> Left Directional Button
+    - Home -> Home Button
+
+Public Classes :
   * InputManager - Attaches to appropriate input events and handles their events.
 
-Private Methods:
+Private Methods :
   * _handle_save_key_combo - Handles Save key combo mappings
   * _handle_navigation_keys - Handles Navigation key mappings
   * _handle_visibility_keys - Handles Visibility key mappings
@@ -29,6 +37,15 @@ KEYS_TRIGGER_STOP = [SKIP_BACK_BUTTON, SKIP_AHEAD_BUTTON, JUMP_BACK_BUTTON, JUMP
 
 SKIP_SIZE = 1
 JUMP_SIZE = 10
+
+# Override Matplotlib Default Keyboard Shortcuts
+MATPLOTLIB_FORWARD_MAPPING = "keymap.forward"
+MATPLOTLIB_BACK_MAPPING = "keymap.back"
+MATPLOTLIB_HOME_MAPPING = "keymap.home"
+
+rcParams[MATPLOTLIB_FORWARD_MAPPING].remove(SKIP_AHEAD_BUTTON)
+rcParams[MATPLOTLIB_BACK_MAPPING].remove(SKIP_BACK_BUTTON)
+rcParams[MATPLOTLIB_HOME_MAPPING].remove(GOTO_BEGINNING_BUTTON)
 
 def _handle_save_key_combo(key, animation_handler):
     """

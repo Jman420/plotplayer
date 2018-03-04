@@ -1,16 +1,12 @@
 """
 PlotPlayer specific Animation Parameters and Default Values
 
-Public Constants :
-  * DEFAULT_ANIMATION_NAME - Default Animation Name for Untitled Animations
-  * DEFAULT_FRAME_RATE - Default Frame Rate for Animation Playback
-
 Public Class :
   * AnimationParams - Parameters related to Animation Playback
 """
 
-DEFAULT_ANIMATION_NAME = "PlotPlayer"
-DEFAULT_FRAME_RATE = 30
+_DEFAULT_ANIMATION_NAME = "PlotPlayer"
+_DEFAULT_FRAME_RATE = 30
 
 class AnimationParams(object):
     """
@@ -28,8 +24,8 @@ class AnimationParams(object):
     frame_rate = None
     animation_name = None
 
-    def __init__(self, max_frame_number, min_frame_number=0, frame_rate=DEFAULT_FRAME_RATE,
-                 animation_name=DEFAULT_ANIMATION_NAME):
+    def __init__(self, max_frame_number, min_frame_number=0, frame_rate=_DEFAULT_FRAME_RATE,
+                 animation_name=_DEFAULT_ANIMATION_NAME):
         """
         Constructor
 

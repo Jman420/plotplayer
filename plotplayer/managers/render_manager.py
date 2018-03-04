@@ -75,20 +75,20 @@ class RenderManager(object):
         """
         self._render_func = render_func
 
-        animation_axes = self._render_axes_params.animation_axes
+        animation_axes = self.get_animation_axes()
         animation_axes.clear()
         animation_axes.set_axis_off()
         self.set_limits()
 
     def set_limits(self, animation_x_limits=None, animation_y_limits=None):
+        
         if animation_x_limits is not None:
             self._render_axes_params.animation_x_limits = animation_x_limits
 
         if animation_y_limits is not None:
             self._render_axes_params.animation_y_limits = animation_y_limits
-
-        animation_axes = self._render_axes_params.animation_axes
-        animation_axes.autoscale(False)
+            
+        animation_axes = self.get_animation_axes()
         animation_axes.set_xlim(self._render_axes_params.animation_x_limits)
         animation_axes.set_ylim(self._render_axes_params.animation_y_limits)
 
@@ -150,7 +150,7 @@ class RenderManager(object):
         Parameters:
           * frame_num - The frame number to render
         """
-        animation_axes = self._render_axes_params.animation_axes
+        animation_axes = self.get_animation_axes()
 
         self._figure.sca(animation_axes)
         self._render_func(frame_num, animation_axes)
