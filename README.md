@@ -58,7 +58,7 @@ pip install <path to plotplayer repo root>
 # Usage
 # Basic Usage
 ```python
-player = PlotPlayer("Dummy Animation")
+player = PlotPlayer()
 player.initialize(100, drawFunc)
 PlotPlayer.show_players()
 ```
@@ -72,7 +72,7 @@ plotplayer.showPlayers() either with no parameters or the parameter True.
 
 ## Automatic Playback
 ```python
-player = PlotPlayer("Dummy Animation")
+player = PlotPlayer()
 player.initialize(100, drawFunc)
 player.play()
 PlotPlayer.show_players()
@@ -81,10 +81,10 @@ This will auto playback 100 frames of animation drawn by the drawFunc() method.
 
 ## Multiple Simultaneous Playbacks
 ```python
-player1 = PlotPlayer("Dummy Animation 1")
+player1 = PlotPlayer()
 player1.initialize(50, drawFunc)
 
-player2 = PlotPlayer("Dummy Animation 2")
+player2 = PlotPlayer()
 player2.initialize(100, drawFunc)
 
 player1.play()
@@ -98,8 +98,9 @@ closing any of the playback windows to avoid these types of errors.
 
 ## Pre-Created Figure
 ```python
-figure = matplotlib.pylab.plt.figure()
-player = PlotPlayer("Dummy Animation", figure)
+figure = matplotlib.pyplot.figure()
+window_handler = WindowManager(figure)
+player = PlotPlayer(window_handler)
 player.initialize(100, drawFunc)
 PlotPlayer.show_players()
 ```
