@@ -126,6 +126,6 @@ indicates to plotplayer that the key press has been handled and to stop processi
 These same patterns are applied to Custom Key Release and Mouse Button Press Handlers as well.
 
 # Examples
-See [plotplayer_test.py](plotplayer/plotplayer_test.py)
+See [plotplayer_test.py](plotplayer_test/plotplayer_test.py)
 
 Also the fractimation project uses plotplayer : https://github.com/Jman420/fractimation
