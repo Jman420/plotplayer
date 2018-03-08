@@ -4,6 +4,7 @@ from plotplayer.plotplayer import PlotPlayer
 
 
 def redraw_fn(frame_num, axes):
+    print(frame_num)
     amp = float(frame_num) / 3000
     f0 = 3
     t = numpy.arange(0.0, 1.0, 0.001)
@@ -13,7 +14,6 @@ def redraw_fn(frame_num, axes):
         redraw_fn.initialized = True
     else:
         redraw_fn.l.set_ydata(s)
-
 
 redraw_fn.initialized = False
 

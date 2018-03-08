@@ -39,9 +39,9 @@ SKIP_SIZE = 1
 JUMP_SIZE = 10
 
 # Override Matplotlib Default Keyboard Shortcuts
-MATPLOTLIB_FORWARD_MAPPING = "keymap.forward"
-MATPLOTLIB_BACK_MAPPING = "keymap.back"
-MATPLOTLIB_HOME_MAPPING = "keymap.home"
+MATPLOTLIB_FORWARD_MAPPING = 'keymap.forward'
+MATPLOTLIB_BACK_MAPPING = 'keymap.back'
+MATPLOTLIB_HOME_MAPPING = 'keymap.home'
 
 rcParams[MATPLOTLIB_FORWARD_MAPPING].remove(SKIP_AHEAD_BUTTON)
 rcParams[MATPLOTLIB_BACK_MAPPING].remove(SKIP_BACK_BUTTON)
@@ -99,9 +99,9 @@ def _handle_navigation_keys(key, animation_handler, skip_size, jump_size):
     elif key == JUMP_AHEAD_BUTTON:
         animation_handler.render(current_frame_num + jump_size)
     elif key == GOTO_BEGINNING_BUTTON:
-        animation_handler.render(animation_handler.get_min_frame_num())
+        animation_handler.render(animation_handler.get_min_frame_number())
     elif key == GOTO_END_BUTTON:
-        animation_handler.render(animation_handler.get_max_frame_number())
+        animation_handler.render(animation_handler.get_max_frame_number() - 1)
     elif key in TOGGLE_PLAY_BUTTON:
         animation_handler.toggle_playback()
     else:
@@ -377,8 +377,8 @@ class InputManager(object):
         if not self._handler_enabled:
             return
 
-        min_frame_num = self._animation_handler.get_min_frame_num()
-        total_frame_count = self._animation_handler.get_max_frame_number() - min_frame_num
+        min_frame_num = self._animation_handler.get_min_frame_number()
+        total_frame_count = self._animation_handler.get_total_frames()
         frame_num = slider_val * total_frame_count + min_frame_num
 
         self._animation_handler.render(frame_num)

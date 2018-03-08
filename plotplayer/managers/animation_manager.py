@@ -69,7 +69,7 @@ class AnimationManager(object):
 
         self._animation_params = animation_params
 
-        self._frame_num = -1
+        self._frame_num = 0
         self._playing = False
 
     def render(self, frame_num):
@@ -85,8 +85,7 @@ class AnimationManager(object):
             frame_num = self._animation_params.max_frame_number
         self._frame_num = int(round(frame_num))
 
-        total_frames = (self._animation_params.max_frame_number -
-                        self._animation_params.min_frame_number)
+        total_frames = self.get_total_frames()
         self._render_handler.render(self._frame_num, total_frames)
 
         if self._frame_num == self._animation_params.max_frame_number:
@@ -100,7 +99,7 @@ class AnimationManager(object):
             return
 
         if self._frame_num == self._animation_params.max_frame_number:
-            self._frame_num = -1
+            self._frame_num = 0
 
         frames_to_play = range(self._frame_num, self._animation_params.max_frame_number + 1)
         animation = FuncAnimation(self._figure, self.render, frames_to_play,
@@ -135,7 +134,7 @@ class AnimationManager(object):
         """
         return self._frame_num
 
-    def get_min_frame_num(self):
+    def get_min_frame_number(self):
         """
         Returns the minimum frame number in the current animation
         """
@@ -146,6 +145,11 @@ class AnimationManager(object):
         Returns the maximum frame number in the current animation
         """
         return self._animation_params.max_frame_number
+
+    def get_total_frames(self):
+        total_frames = (self._animation_params.max_frame_number -
+                        self._animation_params.min_frame_number)
+        return total_frames
 
     def get_html(self):
         """
