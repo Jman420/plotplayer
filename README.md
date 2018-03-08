@@ -16,7 +16,6 @@ a focus on Object Oriented Principles, as well as some additional features for c
 - Support saving animation as video, html and javascript
 - Support hiding/showing Matplotlib Toolbar
 - Support custom Key Press, Release and Mouse Button Press Handlers
-- Support overriding Keyboard Shortcuts
 - Support custom Skip and Jump Sizes
 - Support custom initial window size (set via aspect ratio: (4,3); default:(8,4.5); (16,9); (21,9), etc)
 - Pip scripts for easy installation

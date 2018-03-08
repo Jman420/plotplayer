@@ -78,7 +78,7 @@ class RenderManager(object):
             animation_axes = self.get_animation_axes()
             animation_axes.clear()
             animation_axes.set_axis_off()
-            self._enforce_limits()
+            self.enforce_limits()
 
         self._render_func = render_func
 
@@ -89,7 +89,7 @@ class RenderManager(object):
         self._render_axes_params.animation_x_limits = animation_x_limits
         self._render_axes_params.animation_y_limits = animation_y_limits
 
-        self._enforce_limits()
+        self.enforce_limits()
 
     def render(self, frame_num, total_frames):
         """
@@ -106,6 +106,18 @@ class RenderManager(object):
         self._render_frame(frame_num)
         self._render_slider(slider_val)
         self._figure.canvas.draw_idle()
+
+    def enforce_limits(self):
+        animation_axes = self.get_animation_axes()
+        animation_x_limits = self._render_axes_params.animation_x_limits
+        animation_y_limits = self._render_axes_params.animation_y_limits
+
+        if (animation_x_limits is None or animation_y_limits is None):
+            animation_axes.autoscale(True)
+        else:
+            animation_axes.autoscale(False)
+            animation_axes.set_xlim(animation_x_limits)
+            animation_axes.set_ylim(animation_y_limits)
 
     def set_slider_visible(self, visible):
         """
@@ -163,15 +175,3 @@ class RenderManager(object):
         """
         if self._slider.val != new_slider_val:
             self._slider.set_val(new_slider_val)
-
-    def _enforce_limits(self):
-        animation_axes = self.get_animation_axes()
-        animation_x_limits = self._render_axes_params.animation_x_limits
-        animation_y_limits = self._render_axes_params.animation_y_limits
-
-        if (animation_x_limits is None or animation_y_limits is None):
-            animation_axes.autoscale(True)
-        else:
-            animation_axes.autoscale(False)
-            animation_axes.set_xlim(animation_x_limits)
-            animation_axes.set_ylim(animation_y_limits)
