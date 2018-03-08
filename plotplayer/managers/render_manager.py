@@ -91,7 +91,7 @@ class RenderManager(object):
 
         self.enforce_limits()
 
-    def render(self, frame_num, total_frames):
+    def render(self, frame_num, total_frames, force_draw=False):
         """
         Render a specific frame from a total set of frames
 
@@ -105,7 +105,11 @@ class RenderManager(object):
         slider_val = frame_num / total_frames
         self._render_frame(frame_num)
         self._render_slider(slider_val)
-        self._figure.canvas.draw_idle()
+
+        if force_draw:
+            self._figure.canvas.draw()
+        else:
+            self._figure.canvas.draw_idle()
 
     def enforce_limits(self):
         animation_axes = self.get_animation_axes()
