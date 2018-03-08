@@ -85,8 +85,7 @@ class AnimationManager(object):
             frame_num = self._animation_params.max_frame_number
         self._frame_num = int(round(frame_num))
 
-        total_frames = (self._animation_params.max_frame_number -
-                        self._animation_params.min_frame_number)
+        total_frames = self.get_total_frames()
         self._render_handler.render(self._frame_num, total_frames)
 
         if self._frame_num == self._animation_params.max_frame_number:
@@ -146,6 +145,11 @@ class AnimationManager(object):
         Returns the maximum frame number in the current animation
         """
         return self._animation_params.max_frame_number
+
+    def get_total_frames(self):
+        total_frames = (self._animation_params.max_frame_number -
+                        self._animation_params.min_frame_number)
+        return total_frames
 
     def get_html(self):
         """
