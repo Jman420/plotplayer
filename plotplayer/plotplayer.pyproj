@@ -4,13 +4,15 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>a5260524-e6b8-4e4b-ad1c-a2c6392622ae</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>plotplayer_test.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>plotplayer</Name>
     <RootNamespace>plotplayer</RootNamespace>
+    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,32 +23,44 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="helpers\fileHelper.py">
+    <Compile Include="data_models\animation_params.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="data_models\render_axes_params.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="data_models\slider_params.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="data_models\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="helpers\file_helper.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="player\__init__.py">
+    <Compile Include="managers\window_manager.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="player\plotplayer.py" />
-    <Compile Include="plotplayer_test.py">
+    <Compile Include="plotplayer.py" />
+    <Compile Include="managers\animation_manager.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="validators\typeValidation.py">
+    <Compile Include="validators\type_validation.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\renderHandler.py">
+    <Compile Include="managers\render_manager.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\inputHandler.py">
+    <Compile Include="managers\input_manager.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="helpers\uiHelper.py">
+    <Compile Include="helpers\ui_helper.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\__init__.py">
+    <Compile Include="managers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="validators\__init__.py">
@@ -56,10 +70,25 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="C:\J Stash\Projects\plotplayer\src\plotplayer\helpers\" />
+    <Folder Include="data_models\" />
     <Folder Include="helpers\" />
-    <Folder Include="player\" />
-    <Folder Include="ui\" />
+    <Folder Include="C:\J Stash\Projects\plotplayer\src\plotplayer\managers\" />
+    <Folder Include="managers\" />
     <Folder Include="validators\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env\">
+      <Id>env</Id>
+      <Version>3.6</Version>
+      <Description>env (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
