@@ -39,9 +39,9 @@ SKIP_SIZE = 1
 JUMP_SIZE = 10
 
 # Override Matplotlib Default Keyboard Shortcuts
-MATPLOTLIB_FORWARD_MAPPING = "keymap.forward"
-MATPLOTLIB_BACK_MAPPING = "keymap.back"
-MATPLOTLIB_HOME_MAPPING = "keymap.home"
+MATPLOTLIB_FORWARD_MAPPING = 'keymap.forward'
+MATPLOTLIB_BACK_MAPPING = 'keymap.back'
+MATPLOTLIB_HOME_MAPPING = 'keymap.home'
 
 rcParams[MATPLOTLIB_FORWARD_MAPPING].remove(SKIP_AHEAD_BUTTON)
 rcParams[MATPLOTLIB_BACK_MAPPING].remove(SKIP_BACK_BUTTON)

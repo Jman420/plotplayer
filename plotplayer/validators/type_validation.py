@@ -4,8 +4,8 @@ Simple type validation methods
 
 from matplotlib.figure import Figure
 
-INSTANCE_MESSAGE = "{} must be an instance of {}"
-CALLABLE_MESSAGE = "{} must be a callable object"
+INSTANCE_MESSAGE = '{} must be an instance of {}'
+CALLABLE_MESSAGE = '{} must be a callable object'
 
 def assert_is_figure(value, variable_name):
     """

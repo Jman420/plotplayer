@@ -5,7 +5,7 @@ Public Class :
   * AnimationParams - Parameters related to Animation Playback
 """
 
-_DEFAULT_ANIMATION_NAME = "PlotPlayer"
+_DEFAULT_ANIMATION_NAME = 'PlotPlayer'
 _DEFAULT_FRAME_RATE = 30
 
 class AnimationParams(object):
