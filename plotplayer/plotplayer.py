@@ -4,8 +4,6 @@ PlotPlayer - A functional based animation viewer using Matplotlib
 Public Classes:
   * PlotPlayer - Displays an animation in a Matplotlib Figure Window
 """
-import numpy
-
 from .helpers import ui_helper
 from .data_models.animation_params import AnimationParams
 from .managers import window_manager, render_manager, animation_manager, input_manager

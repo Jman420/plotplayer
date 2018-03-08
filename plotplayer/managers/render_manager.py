@@ -83,9 +83,12 @@ class RenderManager(object):
         self._render_func = render_func
 
     def set_limits(self, animation_x_limits=None, animation_y_limits=None):
+        """
+        Set the Animation Axes X/Y Limits
+        """
         self._render_axes_params.animation_x_limits = animation_x_limits
         self._render_axes_params.animation_y_limits = animation_y_limits
-        
+
         self._enforce_limits()
 
     def render(self, frame_num, total_frames):
@@ -163,11 +166,12 @@ class RenderManager(object):
 
     def _enforce_limits(self):
         animation_axes = self.get_animation_axes()
+        animation_x_limits = self._render_axes_params.animation_x_limits
+        animation_y_limits = self._render_axes_params.animation_y_limits
 
-        if (self._render_axes_params.animation_x_limits is None or
-            self._render_axes_params.animation_y_limits is None):
+        if (animation_x_limits is None or animation_y_limits is None):
             animation_axes.autoscale(True)
         else:
             animation_axes.autoscale(False)
-            animation_axes.set_xlim(self._render_axes_params.animation_x_limits)
-            animation_axes.set_ylim(self._render_axes_params.animation_y_limits)
+            animation_axes.set_xlim(animation_x_limits)
+            animation_axes.set_ylim(animation_y_limits)

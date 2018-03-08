@@ -1,5 +1,3 @@
-from matplotlib.pyplot import rcParams
-
 """
 PlotPlayer specific Input Manager Methods and Classes
 
@@ -17,6 +15,8 @@ Private Methods :
   * _handle_navigation_keys - Handles Navigation key mappings
   * _handle_visibility_keys - Handles Visibility key mappings
 """
+
+from matplotlib.pyplot import rcParams
 
 SKIP_BACK_BUTTON = 'left'
 SKIP_AHEAD_BUTTON = 'right'
@@ -159,9 +159,11 @@ class InputManager(object):
     _window_handler = None
     _render_handler = None
     _animation_handler = None
-    
-    _key_press_handler = None
-    
+
+    _key_press_handlers = None
+    _key_release_handlers = None
+    _mouse_press_handlers = None
+
     _skip_size = None
     _jump_size = None
 
@@ -169,7 +171,7 @@ class InputManager(object):
     _save_button_pressed = False
 
     #pylint: disable=too-many-arguments
-    def __init__(self, window_handler, render_handler, animation_handler, key_press_handler=None,
+    def __init__(self, window_handler, render_handler, animation_handler,
                  skip_size=SKIP_SIZE, jump_size=JUMP_SIZE, enabled=False):
         """
         Constructor
@@ -192,38 +194,106 @@ class InputManager(object):
         self._window_handler = window_handler
         self._render_handler = render_handler
         self._animation_handler = animation_handler
-        self._key_press_handler = key_press_handler
         self._skip_size = skip_size
         self._jump_size = jump_size
         self._save_button_pressed = False
+        self._key_press_handlers = []
+        self._key_release_handlers = []
+        self._mouse_press_handlers = []
 
         self.set_enabled(enabled)
 
         figure = self._window_handler.get_figure()
-        figure.canvas.mpl_connect('button_press_event', self._handle_mouse_button_down)
+        figure.canvas.mpl_connect('button_press_event', self._handle_mouse_press)
         figure.canvas.mpl_connect('key_press_event', self._handle_key_press)
         figure.canvas.mpl_connect('key_release_event', self._handle_key_release)
 
         slider = self._render_handler.get_slider()
         slider.on_changed(self._handle_slider_changed)
 
+    def add_key_press_handler(self, key_press_handler):
+        """
+        Add a Custom Key Press Handler
+
+        Parameters:
+          * key_press_handler - A callable function which receives a parameter for event_data
+        """
+        if key_press_handler not in self._key_press_handlers:
+            self._key_press_handlers.append(key_press_handler)
+
+    def remove_key_press_handler(self, key_press_handler):
+        """
+        Remove a Custom Key Press Handler
+
+        Parameters:
+          * key_press_handler - A callable function which receives a parameter for event_data
+        """
+        if key_press_handler in self._key_press_handlers:
+            self._key_press_handlers.remove(key_press_handler)
+
+    def add_key_release_handler(self, key_release_handler):
+        """
+        Add a Custom Key Release Handler
+
+        Parameters:
+          * key_press_handler - A callable function which receives a parameter for event_data
+        """
+        if key_release_handler not in self._key_release_handlers:
+            self._key_release_handlers.append(key_release_handler)
+
+    def remove_key_release_handler(self, key_release_handler):
+        """
+        Remove a Custom Key Release Handler
+
+        Parameters:
+          * key_press_handler - A callable function which receives a parameter for event_data
+        """
+        if key_release_handler in self._key_release_handlers:
+            self._key_release_handlers.remove(key_release_handler)
+
+    def add_mouse_press_handler(self, mouse_button_press_handler):
+        """
+        Add a Custom Mouse Button Press Handler
+
+        Parameters:
+          * key_press_handler - A callable function which receives a parameter for event_data
+        """
+        if mouse_button_press_handler not in self._mouse_press_handlers:
+            self._mouse_press_handlers.append(mouse_button_press_handler)
+
+    def remove_mouse_press_handler(self, mouse_button_press_handler):
+        """
+        Remove a Custom Mouse Button Press Handler
+
+        Parameters:
+          * key_press_handler - A callable function which receives a parameter for event_data
+        """
+        if mouse_button_press_handler in self._mouse_press_handlers:
+            self._mouse_press_handlers.remove(mouse_button_press_handler)
+
     def get_skip_size(self):
+        """
+        Get the number of frames for the Skip Size
+        """
         return self._skip_size
 
     def set_skip_size(self, size):
+        """
+        Set number of frames for the Skip Size
+        """
         self._skip_size = size
 
     def get_jump_size(self):
+        """
+        Get number of frames for the Jump Size
+        """
         return self._jump_size
 
     def set_jump_size(self, size):
+        """
+        Set number of frames for the Jump Size
+        """
         self._jump_size = size
-
-    def get_key_press_handler(self):
-        return self._key_press_handler
-
-    def set_key_press_handler(self, handler):
-        self._key_press_handler = handler
 
     def set_enabled(self, enabled):
         """
@@ -244,8 +314,9 @@ class InputManager(object):
         if not self._handler_enabled:
             return
 
-        if self._key_press_handler is not None and self._key_press_handler(event_data):
-            return
+        for key_press_handler in self._key_press_handlers:
+            if key_press_handler(event_data):
+                return
 
         key = event_data.key
         if self._save_button_pressed and _handle_save_key_combo(key, self._animation_handler):
@@ -270,12 +341,16 @@ class InputManager(object):
         if not self._handler_enabled:
             return
 
+        for key_release_handler in self._key_release_handlers:
+            if key_release_handler(event_data):
+                return
+
         key = event_data.key
 
         if key == SAVE_BUTTON:
             self._save_button_pressed = False
 
-    def _handle_mouse_button_down(self, event_data):
+    def _handle_mouse_press(self, event_data):
         """
         Handle Matplotlib button_press_event for WindowManager Instance
 
@@ -284,6 +359,10 @@ class InputManager(object):
         """
         if not self._handler_enabled:
             return
+
+        for mouse_press_handler in self._mouse_press_handlers:
+            if mouse_press_handler(event_data):
+                return
 
         if event_data.inaxes == self._render_handler.get_slider_axes():
             self._animation_handler.stop()

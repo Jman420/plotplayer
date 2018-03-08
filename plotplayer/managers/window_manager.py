@@ -51,6 +51,9 @@ class WindowManager(object):
         self.set_toolbar_visible(toolbar_visible)
 
     def set_window_title(self, window_title):
+        """
+        Set the Window Title
+        """
         if window_title is None:
             window_title = _DEFAULT_ANIMATION_NAME
         self.get_figure().canvas.set_window_title(window_title)
