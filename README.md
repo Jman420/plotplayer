@@ -115,7 +115,7 @@ def key_press_handler(eventData):
     print(eventData)
     return False
 
-player = PlotPlayer("Dummy Animation")
+player = PlotPlayer()
 input_handler = player.get_input_manager()
 input_handler.add_key_press_handler(key_press_handler)
 player.initialize(100, drawFunc)
