@@ -134,7 +134,7 @@ class AnimationManager(object):
         """
         return self._frame_num
 
-    def get_min_frame_num(self):
+    def get_min_frame_number(self):
         """
         Returns the minimum frame number in the current animation
         """
