@@ -72,7 +72,7 @@ class PlotPlayer(object):
 
         self._render_handler.initialize(draw_func)
 
-        animation_params = AnimationParams(total_frames, animation_name=animation_name)
+        animation_params = AnimationParams(total_frames - 1, animation_name=animation_name)
         self._animation_handler.initialize(animation_params)
         self._input_handler.set_enabled(True)
         self.get_animation_manager().render(0)

@@ -69,7 +69,7 @@ class AnimationManager(object):
 
         self._animation_params = animation_params
 
-        self._frame_num = -1
+        self._frame_num = 0
         self._playing = False
 
     def render(self, frame_num):
@@ -99,7 +99,7 @@ class AnimationManager(object):
             return
 
         if self._frame_num == self._animation_params.max_frame_number:
-            self._frame_num = -1
+            self._frame_num = 0
 
         frames_to_play = range(self._frame_num, self._animation_params.max_frame_number + 1)
         animation = FuncAnimation(self._figure, self.render, frames_to_play,
