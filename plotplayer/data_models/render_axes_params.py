@@ -28,8 +28,10 @@ class RenderAxesParams(object):
 
         Parameters :
           * animation_axes - Instance of Matplotlib Axes to use for Animation
-          * animation_x_limits - An array representing the minimum and maximum animation x-axis limits
-          * animation_y_limits - An array representing the minimum and maximum animation y-axis limits
+          * animation_x_limits - An array representing the minimum and maximum animation x-axis
+              limits
+          * animation_y_limits - An array representing the minimum and maximum animation y-axis
+              limits
           * slider_axes - Instance of Matplotlib Axes to use for the Scrubber Slider
         """
         self.animation_axes = animation_axes
