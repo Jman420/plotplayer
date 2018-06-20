@@ -1,4 +1,6 @@
 # plotplayer
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FJman420%2Fplotplayer.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FJman420%2Fplotplayer?ref=badge_shield)
+
 Function based animation player for Matplotlib
 
 # Dependencies
@@ -128,3 +130,6 @@ These same patterns are applied to Custom Key Release and Mouse Button Press Han
 See [plotplayer_test.py](plotplayer_test/plotplayer_test.py)
 
 Also the fractimation project uses plotplayer : https://github.com/Jman420/fractimation
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FJman420%2Fplotplayer.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FJman420%2Fplotplayer?ref=badge_large)
